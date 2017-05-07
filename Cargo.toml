@@ -1,0 +1,17 @@
+[package]
+name = "beerxml"
+version = "0.1.0"
+authors = ["Joost Yervante Damad <joost@damad.be>"]
+license = "MIT/Apache-2.0"
+description = "beerxml/json/yaml parser generator"
+documentation = "https://docs.rs/crate/beerxml"
+homepage = "http://brewcalc.org"
+repository = "https://github.com/andete/beerxml"
+keywords = ["brewing", "beer", "mead"]
+categories = ["command-line-utilities"]
+
+[badges]
+travis-ci = { repository = "andete/beerxml" }
+
+[dependencies]
+clap = "2.20"
