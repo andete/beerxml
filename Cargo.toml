@@ -15,3 +15,4 @@ travis-ci = { repository = "andete/beerxml" }
 
 [dependencies]
 clap = "2.20"
+quick-xml = "0.7"
