@@ -16,11 +16,18 @@ fn indent<T>(writer: &mut T, offset: usize) -> Result<()>
     Ok(())
 }
 
-fn write_fermentable<T>(writer: &mut T, v: &Fermentable, offset: usize) -> Result<()>
+fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Result<()>
     where T: Write
 {
     indent(writer, offset)?;
     writer.write_all(b"<FERMENTABLE>\n")?;
+    
+    indent(writer, offset+1)?;
+    write!(writer, "<NAME>{}</NAME>\n", f.name)?;
+    
+    indent(writer, offset+1)?;
+    write!(writer, "<TYPE>{}</TYPE>\n", f.type_.as_str())?;
+    
     indent(writer, offset)?;
     writer.write_all(b"</FERMENTABLE>\n")?;
     Ok(())

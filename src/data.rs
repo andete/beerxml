@@ -39,6 +39,16 @@ impl FermentableType {
             _ => Err(format!("unknown Fermentable Type {}", name).into()),
         }
     }
+
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            FermentableType::Grain => "Grain",
+            FermentableType::Sugar => "Sugar",
+            FermentableType::Extract => "Extract",
+            FermentableType::DryExtract => "Dry Extract",
+            FermentableType::Adjunct => "Adjunct",
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
