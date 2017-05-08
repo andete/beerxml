@@ -40,6 +40,17 @@ fn read_value_f<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<f64>
     Ok(f)
 }
 
+fn read_value_b<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<bool>
+    where B:BufRead
+{
+    let v = read_value(reader, name)?;
+    match v.as_str() {
+        "TRUE" => Ok(true),
+        "FALSE" => Ok(false),
+        x => Err(format!("unknown boolean: {}", x).into()),
+    }
+}
+
 fn read_fermentable<B>(reader:&mut Reader<B>) -> Result<Fermentable>
     where B:BufRead
 {
@@ -56,6 +67,45 @@ fn read_fermentable<B>(reader:&mut Reader<B>) -> Result<Fermentable>
             },
             Event::Start(ref e) if e.name() == b"AMOUNT" => {
                 f.amount = read_value_f(reader, e.name())?;
+            },
+            Event::Start(ref e) if e.name() == b"YIELD" => {
+                f.yield_ = read_value_f(reader, e.name())?;
+            },
+            Event::Start(ref e) if e.name() == b"COLOR" => {
+                f.color = read_value_f(reader, e.name())?;
+            },
+            Event::Start(ref e) if e.name() == b"ADD_AFTER_BOIL" => {
+                f.add_after_boil = read_value_b(reader, e.name())?;
+            },
+            Event::Start(ref e) if e.name() == b"ORIGIN" => {
+                f.origin = Some(read_value(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"SUPPLIER" => {
+                f.supplier = Some(read_value(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"NOTES" => {
+                f.notes = Some(read_value(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"COARSE_FINE_DIFF" => {
+                f.coarse_fine_diff = Some(read_value_f(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"MOISTURE" => {
+                f.moisture = Some(read_value_f(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"DIASTATIC_POWER" => {
+                f.diastatic_power = Some(read_value_f(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"PROTEINE" => {
+                f.proteine = Some(read_value_f(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"MAX_IN_BATCH" => {
+                f.max_in_batch = Some(read_value_f(reader, e.name())?);
+            },
+            Event::Start(ref e) if e.name() == b"RECOMMENDED_MASH" => {
+                f.recommended_mash = read_value_b(reader, e.name())?;
+            },
+            Event::Start(ref e) if e.name() == b"IBU_GAL_PER_LB" => {
+                f.ibu_gal_per_lb = Some(read_value_f(reader, e.name())?);
             },
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());

@@ -68,7 +68,7 @@ pub struct Fermentable {
     /// percent difference between the coarse grain yield and
     /// fine grain yield.  Only appropriate for a "Grain" or
     /// "Adjunct" type, otherwise this value is ignored
-    pub course_fine_diff: Option<f64>,
+    pub coarse_fine_diff: Option<f64>,
     /// percent moisture in the grain.  Only appropriate for a
     /// "Grain" or "Adjunct" type, otherwise this value is ignored
     pub moisture: Option<f64>,
