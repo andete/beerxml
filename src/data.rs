@@ -1,5 +1,7 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+use error::*;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum RecordSet {
     Empty,
@@ -20,7 +22,26 @@ pub enum FermentableType {
     Adjunct,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+impl Default for FermentableType {
+    fn default() -> FermentableType {
+        FermentableType::Grain
+    }
+}
+
+impl FermentableType {
+    pub fn make(name:&str) -> Result<FermentableType> {
+        match name {
+            "Grain" => Ok(FermentableType::Grain),
+            "Sugar" => Ok(FermentableType::Sugar),
+            "Extract" => Ok(FermentableType::Extract),
+            "Dry Extract" => Ok(FermentableType::DryExtract),
+            "Adjunct" => Ok(FermentableType::Adjunct),
+            _ => Err(format!("unknown Fermentable Type {}", name).into()),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Fermentable {
     /// name of the fermentable
     pub name: String,
