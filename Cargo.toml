@@ -16,4 +16,7 @@ travis-ci = { repository = "andete/beerxml" }
 [dependencies]
 clap = "2.20"
 quick-xml = "0.7"
-
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
+serde_yaml = "0.7"

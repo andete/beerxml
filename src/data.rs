@@ -1,5 +1,11 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+#[derive(Serialize, Deserialize, Debug)]
+pub enum RecordSet {
+    Fermentables(Vec<Fermentable>),
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub enum FermentableType {
     /// grain
     Grain,
@@ -13,6 +19,7 @@ pub enum FermentableType {
     Adjunct,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Fermentable {
     /// name of the fermentable
     pub name: String,
