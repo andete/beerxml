@@ -19,7 +19,7 @@ fn read_value<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<String>
     loop {
         match reader.read_event(&mut buf)? {
             Event::Text(ref e) => {
-                txt = e.unescape_and_decode(&reader)?;
+                txt = e.unescape_and_decode(reader)?;
             }
             Event::End(ref e) if e.name() == name => break,
             Event::Eof => break,

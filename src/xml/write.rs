@@ -11,7 +11,7 @@ fn indent<T>(writer: &mut T, offset: usize) -> Result<()>
     where T: Write
 {
     for _ in 0..offset {
-        writer.write(b"  ")?;
+        writer.write_all(b"  ")?;
     }
     Ok(())
 }
@@ -20,9 +20,9 @@ fn write_fermentable<T>(writer: &mut T, v: &Fermentable, offset: usize) -> Resul
     where T: Write
 {
     indent(writer, offset)?;
-    writer.write(b"<FERMENTABLE>\n")?;
+    writer.write_all(b"<FERMENTABLE>\n")?;
     indent(writer, offset)?;
-    writer.write(b"</FERMENTABLE>\n")?;
+    writer.write_all(b"</FERMENTABLE>\n")?;
     Ok(())
 }
 
@@ -30,12 +30,12 @@ fn write_fermentables<T>(writer: &mut T, v: &Vec<Fermentable>, offset: usize) ->
     where T: Write
 {
     indent(writer, offset)?;
-    writer.write(b"<FERMENTABLES>\n")?;
+    writer.write_all(b"<FERMENTABLES>\n")?;
     for f in v {
         write_fermentable(writer, f, offset + 1)?;
     }
     indent(writer, offset)?;
-    writer.write(b"</FERMENTABLES>\n")?;
+    writer.write_all(b"</FERMENTABLES>\n")?;
     Ok(())
 }
 
