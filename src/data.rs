@@ -2,6 +2,7 @@
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum RecordSet {
+    Empty,
     Fermentables(Vec<Fermentable>),
 }
 
