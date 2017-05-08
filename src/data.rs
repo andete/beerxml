@@ -29,7 +29,7 @@ impl Default for FermentableType {
 }
 
 impl FermentableType {
-    pub fn make(name:&str) -> Result<FermentableType> {
+    pub fn make(name: &str) -> Result<FermentableType> {
         match name {
             "Grain" => Ok(FermentableType::Grain),
             "Sugar" => Ok(FermentableType::Sugar),

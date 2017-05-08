@@ -19,16 +19,17 @@ fn main() {
         .author("Joost Yervante Damad <joost@damad.be>")
         .about("Dump test program")
         .arg(Arg::with_name("FILE")
-             .required(true)
-             .index(1)
-             .help("filename")).get_matches();
+            .required(true)
+            .index(1)
+            .help("filename"))
+        .get_matches();
 
-    env::set_var("RUST_LOG","info");
-    env_logger::init().unwrap(); 
+    env::set_var("RUST_LOG", "info");
+    env_logger::init().unwrap();
 
-    
+
     let filename = m.value_of("FILE").unwrap();
-    
+
     let content = beerxml::xml::read_file(Path::new(filename)).unwrap();
     info!("Content: {:?}", content);
 }

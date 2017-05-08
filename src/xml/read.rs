@@ -11,8 +11,8 @@ use quick_xml::events::Event;
 use data::*;
 use error::*;
 
-fn read_value<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<String>
-    where B:BufRead
+fn read_value<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<String>
+    where B: BufRead
 {
     let mut buf = vec![];
     let mut txt = String::new();
@@ -20,10 +20,8 @@ fn read_value<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<String>
         match reader.read_event(&mut buf)? {
             Event::Text(ref e) => {
                 txt = e.unescape_and_decode(&reader)?;
-            },
-            Event::End(ref e) if e.name() == name => {
-                break
-            },
+            }
+            Event::End(ref e) if e.name() == name => break,
             Event::Eof => break,
             _ => (),
         }
@@ -32,16 +30,16 @@ fn read_value<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<String>
     Ok(txt)
 }
 
-fn read_value_f<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<f64>
-    where B:BufRead
+fn read_value_f<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<f64>
+    where B: BufRead
 {
     let v = read_value(reader, name)?;
     let f = v.parse()?;
     Ok(f)
 }
 
-fn read_value_b<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<bool>
-    where B:BufRead
+fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
+    where B: BufRead
 {
     let v = read_value(reader, name)?;
     match v.as_str() {
@@ -51,8 +49,8 @@ fn read_value_b<B>(reader:&mut Reader<B>, name:&[u8]) -> Result<bool>
     }
 }
 
-fn read_fermentable<B>(reader:&mut Reader<B>) -> Result<Fermentable>
-    where B:BufRead
+fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<Fermentable>
+    where B: BufRead
 {
     let mut buf = vec![];
     let mut f = Fermentable::default();
@@ -60,59 +58,57 @@ fn read_fermentable<B>(reader:&mut Reader<B>) -> Result<Fermentable>
         match reader.read_event(&mut buf)? {
             Event::Start(ref e) if e.name() == b"NAME" => {
                 f.name = read_value(reader, e.name())?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"TYPE" => {
                 let v = read_value(reader, e.name())?;
                 f.type_ = FermentableType::make(&v)?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"AMOUNT" => {
                 f.amount = read_value_f(reader, e.name())?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"YIELD" => {
                 f.yield_ = read_value_f(reader, e.name())?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"COLOR" => {
                 f.color = read_value_f(reader, e.name())?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"ADD_AFTER_BOIL" => {
                 f.add_after_boil = read_value_b(reader, e.name())?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"ORIGIN" => {
                 f.origin = Some(read_value(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"SUPPLIER" => {
                 f.supplier = Some(read_value(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"NOTES" => {
                 f.notes = Some(read_value(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"COARSE_FINE_DIFF" => {
                 f.coarse_fine_diff = Some(read_value_f(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"MOISTURE" => {
                 f.moisture = Some(read_value_f(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"DIASTATIC_POWER" => {
                 f.diastatic_power = Some(read_value_f(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"PROTEINE" => {
                 f.proteine = Some(read_value_f(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"MAX_IN_BATCH" => {
                 f.max_in_batch = Some(read_value_f(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) if e.name() == b"RECOMMENDED_MASH" => {
                 f.recommended_mash = read_value_b(reader, e.name())?;
-            },
+            }
             Event::Start(ref e) if e.name() == b"IBU_GAL_PER_LB" => {
                 f.ibu_gal_per_lb = Some(read_value_f(reader, e.name())?);
-            },
+            }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
-            },
-            Event::End(ref e) if e.name() == b"FERMENTABLE" => {
-                break
-            },
+            }
+            Event::End(ref e) if e.name() == b"FERMENTABLE" => break,
             Event::Eof => break,
             _ => (),
         }
@@ -121,8 +117,8 @@ fn read_fermentable<B>(reader:&mut Reader<B>) -> Result<Fermentable>
     Ok(f)
 }
 
-fn read_fermentables<B>(reader:&mut Reader<B>) -> Result<Vec<Fermentable>>
-    where B:BufRead
+fn read_fermentables<B>(reader: &mut Reader<B>) -> Result<Vec<Fermentable>>
+    where B: BufRead
 {
     let mut buf = vec![];
     let mut fermentables = vec![];
@@ -131,13 +127,11 @@ fn read_fermentables<B>(reader:&mut Reader<B>) -> Result<Vec<Fermentable>>
             Event::Start(ref e) if e.name() == b"FERMENTABLE" => {
                 let fermentable = read_fermentable(reader)?;
                 fermentables.push(fermentable);
-            },
+            }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
-            },
-            Event::End(ref e) if e.name() == b"FERMENTABLES" => {
-                break
-            },
+            }
+            Event::End(ref e) if e.name() == b"FERMENTABLES" => break,
             Event::Eof => break,
             _ => (),
         }
@@ -146,8 +140,8 @@ fn read_fermentables<B>(reader:&mut Reader<B>) -> Result<Vec<Fermentable>>
     Ok(fermentables)
 }
 
-pub fn read<B>(reader:B) -> Result<RecordSet>
-    where B:BufRead
+pub fn read<B>(reader: B) -> Result<RecordSet>
+    where B: BufRead
 {
     let mut reader = Reader::from_reader(reader);
     reader.trim_text(true);
@@ -159,7 +153,7 @@ pub fn read<B>(reader:B) -> Result<RecordSet>
                 let f = read_fermentables(&mut reader)?;
                 rs = RecordSet::Fermentables(f);
                 // info!("Fermentables.: {:?}", f);
-            },
+            }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
             }
@@ -171,7 +165,7 @@ pub fn read<B>(reader:B) -> Result<RecordSet>
     Ok(rs)
 }
 
-pub fn read_file(filename:&Path) -> Result<RecordSet> {
+pub fn read_file(filename: &Path) -> Result<RecordSet> {
     let f = File::open(filename)?;
     let reader = BufReader::new(f);
     read(reader)
