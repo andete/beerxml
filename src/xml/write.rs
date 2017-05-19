@@ -1,5 +1,6 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+use std::collections::HashMap;
 use std::io::Write;
 use std::fs::File;
 use std::path::Path;
@@ -112,12 +113,12 @@ fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Resul
     Ok(())
 }
 
-fn write_fermentables<T>(writer: &mut T, v: &Vec<Fermentable>, offset: usize) -> Result<()>
+fn write_fermentables<T>(writer: &mut T, v: &HashMap<String, Fermentable>, offset: usize) -> Result<()>
     where T: Write
 {
     indent(writer, offset)?;
     writer.write_all(b"<FERMENTABLES>\n")?;
-    for f in v {
+    for f in v.values() {
         write_fermentable(writer, f, offset + 1)?;
     }
     indent(writer, offset)?;

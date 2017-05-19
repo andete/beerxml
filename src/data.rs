@@ -1,11 +1,13 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+use std::collections::HashMap;
+
 use error::*;
 
 #[derive(Debug)]
 pub enum RecordSet {
     Empty,
-    Fermentables(Vec<Fermentable>),
+    Fermentables(HashMap<String, Fermentable>),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -54,6 +56,7 @@ impl FermentableType {
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Fermentable {
     /// name of the fermentable
+    #[serde(skip_serializing)]
     pub name: String,
     /// type of fermentable
     pub type_: FermentableType,

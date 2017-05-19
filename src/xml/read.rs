@@ -1,5 +1,6 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+use std::collections::HashMap;
 use std::io::{BufRead, BufReader};
 use std::fs::File;
 use std::path::Path;
@@ -125,16 +126,16 @@ fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<Fermentable>
     Ok(f)
 }
 
-fn read_fermentables<B>(reader: &mut Reader<B>) -> Result<Vec<Fermentable>>
+fn read_fermentables<B>(reader: &mut Reader<B>) -> Result<HashMap<String, Fermentable>>
     where B: BufRead
 {
     let mut buf = vec![];
-    let mut fermentables = vec![];
+    let mut fermentables = HashMap::new();
     loop {
         match reader.read_event(&mut buf)? {
             Event::Start(ref e) if e.name() == b"FERMENTABLE" => {
                 let fermentable = read_fermentable(reader)?;
-                fermentables.push(fermentable);
+                fermentables.insert(fermentable.name.clone(), fermentable);
             }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
