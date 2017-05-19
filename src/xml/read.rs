@@ -30,6 +30,14 @@ fn read_value<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<String>
     Ok(txt)
 }
 
+fn empty_option(s:String) -> Option<String> {
+    if s.is_empty() {
+        None
+    } else {
+        Some(s)
+    }
+}
+
 fn read_value_f<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<f64>
     where B: BufRead
 {
@@ -76,10 +84,10 @@ fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<Fermentable>
                 f.add_after_boil = read_value_b(reader, e.name())?;
             }
             Event::Start(ref e) if e.name() == b"ORIGIN" => {
-                f.origin = Some(read_value(reader, e.name())?);
+                f.origin = empty_option(read_value(reader, e.name())?);
             }
             Event::Start(ref e) if e.name() == b"SUPPLIER" => {
-                f.supplier = Some(read_value(reader, e.name())?);
+                f.supplier = empty_option(read_value(reader, e.name())?);
             }
             Event::Start(ref e) if e.name() == b"NOTES" => {
                 f.notes = Some(read_value(reader, e.name())?);

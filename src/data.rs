@@ -69,28 +69,36 @@ pub struct Fermentable {
     /// during the mash or boil
     pub add_after_boil: bool,
     /// country or place of origin
+    #[serde(skip_serializing_if="Option::is_none")]
     pub origin: Option<String>,
     /// supplier of the grain/extract/sugar
+    #[serde(skip_serializing_if="Option::is_none")]
     pub supplier: Option<String>,
     /// textual noted describing this ingredient and its use.
     /// May be multiline
+    #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,
     /// percent difference between the coarse grain yield and
     /// fine grain yield.  Only appropriate for a "Grain" or
     /// "Adjunct" type, otherwise this value is ignored
+    #[serde(skip_serializing_if="Option::is_none")]
     pub coarse_fine_diff: Option<f64>,
     /// percent moisture in the grain.  Only appropriate for a
     /// "Grain" or "Adjunct" type, otherwise this value is ignored
+    #[serde(skip_serializing_if="Option::is_none")]
     pub moisture: Option<f64>,
     /// the diastatic power of the grain as measured in "Lintner"
     /// units. Only appropriate for a "Grain" or "Adjunct" type,
     /// otherwise this value is ignored
+    #[serde(skip_serializing_if="Option::is_none")]
     pub diastatic_power: Option<f64>,
     /// the percent protein in the grain.  Only appropriate for
     /// a "Grain" or "Adjunct" type, otherwise this value is ignored
+    #[serde(skip_serializing_if="Option::is_none")]
     pub proteine: Option<f64>,
     /// the recommended maximum percentage (by weight) this
     /// ingredient should represent in a batch of beer
+    #[serde(skip_serializing_if="Option::is_none")]
     pub max_in_batch: Option<f64>,
     /// true if it is recommended the grain be mashed, false
     /// if it can be steeped.  A value of true is only appropriate
@@ -104,5 +112,6 @@ pub struct Fermentable {
     /// and divide by the number of gallons in the batch.  Based on
     /// a sixty minute boil.  Only suitable for use with an "Extract"
     /// type, otherwise this value is ignored
+    #[serde(skip_serializing_if="Option::is_none")]
     pub ibu_gal_per_lb: Option<f64>,
 }
