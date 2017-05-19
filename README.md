@@ -1,6 +1,6 @@
 # beerxml
 
-beerxml/json/yaml parser generator
+beerxml/json/yaml/toml parser generator
 
 [![Build Status](https://travis-ci.org/andete/beerxml.svg?branch=master)](https://travis-ci.org/andete/beerxml)
 

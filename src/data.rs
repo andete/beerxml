@@ -2,7 +2,7 @@
 
 use error::*;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug)]
 pub enum RecordSet {
     Empty,
     Fermentables(Vec<Fermentable>),

@@ -4,6 +4,7 @@ extern crate quick_xml;
 extern crate serde;
 extern crate serde_json;
 extern crate serde_yaml;
+extern crate toml as serde_toml;
 
 #[macro_use]
 extern crate error_chain;
@@ -21,3 +22,6 @@ mod tests {
 pub mod data;
 pub mod error;
 pub mod xml;
+pub mod json;
+pub mod toml;
+pub mod yaml;

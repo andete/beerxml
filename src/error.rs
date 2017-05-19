@@ -11,6 +11,9 @@ error_chain! {
         Io(::std::io::Error);
         Utf8(::std::str::Utf8Error);
         ParseFloat(::std::num::ParseFloatError);
+        Json(::serde_json::Error);
+        Yaml(::serde_yaml::Error);
+        Toml(::serde_toml::ser::Error);
     }
     
 }
