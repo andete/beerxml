@@ -31,7 +31,7 @@ fn read_value<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<String>
     Ok(txt)
 }
 
-fn empty_option(s:String) -> Option<String> {
+fn empty_option(s: String) -> Option<String> {
     if s.is_empty() {
         None
     } else {

@@ -113,7 +113,10 @@ fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Resul
     Ok(())
 }
 
-fn write_fermentables<T>(writer: &mut T, v: &HashMap<String, Fermentable>, offset: usize) -> Result<()>
+fn write_fermentables<T>(writer: &mut T,
+                         v: &HashMap<String, Fermentable>,
+                         offset: usize)
+                         -> Result<()>
     where T: Write
 {
     indent(writer, offset)?;

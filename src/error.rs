@@ -15,5 +15,4 @@ error_chain! {
         Yaml(::serde_yaml::Error);
         Toml(::serde_toml::ser::Error);
     }
-    
 }

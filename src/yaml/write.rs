@@ -14,8 +14,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
 {
     match *set {
         RecordSet::Empty => (),
-        RecordSet::Fermentables(ref v) =>
-            serde_yaml::to_writer(writer, v)?,
+        RecordSet::Fermentables(ref v) => serde_yaml::to_writer(writer, v)?,
     }
     Ok(())
 }
