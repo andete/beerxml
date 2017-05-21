@@ -13,6 +13,7 @@ error_chain! {
         ParseFloat(::std::num::ParseFloatError);
         Json(::serde_json::Error);
         Yaml(::serde_yaml::Error);
-        Toml(::serde_toml::ser::Error);
+        TomlSer(::serde_toml::ser::Error);
+        TomlDe(::serde_toml::de::Error);
     }
 }

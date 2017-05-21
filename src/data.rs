@@ -56,7 +56,7 @@ impl FermentableType {
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Fermentable {
     /// name of the fermentable
-    #[serde(skip_serializing)]
+    #[serde(skip_serializing,skip_deserializing)]
     pub name: String,
     /// type of fermentable
     pub type_: FermentableType,

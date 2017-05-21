@@ -1,10 +1,19 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
-/*
+use std::io::{BufRead, BufReader};
+use std::fs::File;
+use std::path::Path;
+
+use serde_json;
+
+use data::*;
+use error::*;
+
 pub fn read<B>(reader: B) -> Result<RecordSet>
     where B: BufRead
 {
-    serde_json::from_reader(reader)?;
+    let rs = serde_json::from_reader(reader)?;
+    Ok(rs)
 }
 
 pub fn read_file(filename: &Path) -> Result<RecordSet> {
@@ -12,4 +21,3 @@ pub fn read_file(filename: &Path) -> Result<RecordSet> {
     let reader = BufReader::new(f);
     read(reader)
 }
-*/
