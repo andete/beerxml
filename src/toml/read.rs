@@ -12,19 +12,19 @@ use error::*;
 
 #[derive(Deserialize)]
 struct PrivateDocument {
-    document:String,
+    document: String,
 }
 
 pub fn read_str(s: &str) -> Result<RecordSet> {
-    let pd:PrivateDocument = serde_toml::from_str(s)?;
+    let pd: PrivateDocument = serde_toml::from_str(s)?;
     let document = pd.document.as_str();
     let marker = format!("document = \"{}\"", document);
     let s2 = s.replacen(&marker, "", 1);
     match document {
         "Fermentables" => {
-            let h:HashMap<String,Fermentable> = serde_toml::from_str(&s2)?;
+            let h: HashMap<String, Fermentable> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Fermentables(h))
-        },
+        }
         e => Err(format!("Toml: Unimplemented document type {}", e).into()),
     }
 }
