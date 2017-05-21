@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use error::*;
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum RecordSet {
     Empty,
     Fermentables(HashMap<String, Fermentable>),

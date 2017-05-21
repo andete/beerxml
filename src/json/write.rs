@@ -12,10 +12,7 @@ use error::*;
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
-    match *set {
-        RecordSet::Empty => (),
-        RecordSet::Fermentables(ref v) => serde_json::to_writer_pretty(writer, v)?,
-    }
+    serde_json::to_writer_pretty(writer, set)?;
     Ok(())
 }
 

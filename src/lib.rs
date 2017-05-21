@@ -28,7 +28,7 @@ pub fn read_file(filename: &Path) -> Result<RecordSet> {
     if let Some(ext) = filename.extension() {
         match ext.to_str().unwrap() {
             "xml" => xml::read_file(filename),
-            // "json" => json::read_file(filename),
+            //"json" => json::read_file(filename),
             // "yaml" => yaml::read_file(filename),
             // "toml" => toml::read_file(filename),
             e => Err(format!("unknown file extension {}", e).into()),

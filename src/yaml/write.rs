@@ -12,10 +12,7 @@ use error::*;
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
-    match *set {
-        RecordSet::Empty => (),
-        RecordSet::Fermentables(ref v) => serde_yaml::to_writer(writer, v)?,
-    }
+    serde_yaml::to_writer(writer, set)?;
     Ok(())
 }
 
