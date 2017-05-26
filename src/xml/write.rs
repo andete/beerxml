@@ -2,6 +2,7 @@
 
 use std::collections::HashMap;
 use std::io::Write;
+use std::fmt::Display;
 use std::fs::File;
 use std::path::Path;
 
@@ -17,99 +18,65 @@ fn indent<T>(writer: &mut T, offset: usize) -> Result<()>
     Ok(())
 }
 
+fn write_tag<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:U) -> Result<()>
+    where T:Write, U:Display
+{
+    indent(writer, offset + 1)?;
+    write!(writer, "<{}>{}</{}>\n", tag, value, tag)?;
+    Ok(())
+}
+fn write_opt<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:&Option<U>) -> Result<()>
+    where T: Write, U:Display
+{
+    if let Some(ref value) = *value {
+        indent(writer, offset + 1)?;
+        write!(writer, "<{}>{}</{}>\n", tag, value, tag)?;
+    }
+    Ok(())
+}
+
+fn write_block<F,T>(writer: &mut T, offset: usize, tag:&'static str, containing:F) -> Result<()>
+    where T: Write,
+          F: Fn(&mut T, usize) -> Result<()>
+{
+    indent(writer, offset)?;
+    write!(writer,"<{}>\n", tag)?;
+    containing(writer, offset+1)?;
+    indent(writer, offset)?;
+    write!(writer,"</{}>\n", tag)?;
+    Ok(())
+}
+
 fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Result<()>
     where T: Write
 {
-    indent(writer, offset)?;
-    writer.write_all(b"<FERMENTABLE>\n")?;
+    write_block(writer, offset, "FERMENTABLE", |writer, offset| {
 
-    indent(writer, offset + 1)?;
-    write!(writer, "<NAME>{}</NAME>\n", f.name)?;
+        write_tag(writer, offset, "NAME", &f.name)?;
+        write_tag(writer, offset, "TYPE", f.type_.as_str())?;
+        write_tag(writer, offset, "AMOUNT", f.amount)?;
+        write_tag(writer, offset, "YIELD", f.yield_)?;
+        write_tag(writer, offset, "COLOR", f.color)?;
+        if f.add_after_boil {
+            write_tag(writer, offset, "ADD_AFTER_BOIL", f.add_after_boil)?
+        }
+        write_opt(writer, offset, "ORIGIN", &f.origin)?;
+        write_opt(writer, offset, "SUPPLIER", &f.supplier)?;
+        write_opt(writer, offset, "NOTES", &f.notes)?;
+        write_opt(writer, offset, "COARSE_FINE_DIFF", &f.coarse_fine_diff)?;
+        write_opt(writer, offset, "MOISTURE", &f.moisture)?;
+        write_opt(writer, offset, "DIASTATIC_POWER", &f.diastatic_power)?;
+        write_opt(writer, offset, "PROTEINE", &f.proteine)?;
+        write_opt(writer, offset, "MAX_IN_BATCH", &f.max_in_batch)?;
+        if f.recommended_mash {
+            write_tag(writer, offset, "RECOMMENDED_MASH", f.recommended_mash)?;
+        }
+        write_opt(writer, offset, "IBU_GAL_PER_LB", &f.ibu_gal_per_lb)
+    })
+}
 
-    indent(writer, offset + 1)?;
-    write!(writer, "<TYPE>{}</TYPE>\n", f.type_.as_str())?;
-
-    indent(writer, offset + 1)?;
-    write!(writer, "<AMOUNT>{}</AMOUNT>\n", f.amount)?;
-
-    indent(writer, offset + 1)?;
-    write!(writer, "<YIELD>{}</YIELD>\n", f.yield_)?;
-
-    indent(writer, offset + 1)?;
-    write!(writer, "<COLOR>{}</COLOR>\n", f.color)?;
-
-    if f.add_after_boil {
-        indent(writer, offset + 1)?;
-        write!(writer,
-               "<ADD_AFTER_BOIL>{}</ADD_AFTER_BOIL>\n",
-               f.add_after_boil)
-            ?;
-    }
-
-    if let Some(ref origin) = f.origin {
-        indent(writer, offset + 1)?;
-        write!(writer, "<ORIGIN>{}</ORIGIN>\n", origin)?;
-    }
-
-    if let Some(ref supplier) = f.supplier {
-        indent(writer, offset + 1)?;
-        write!(writer, "<SUPPLIER>{}</SUPPLIER>\n", supplier)?;
-    }
-
-    if let Some(ref notes) = f.notes {
-        indent(writer, offset + 1)?;
-        write!(writer, "<NOTES>{}</NOTES>\n", notes)?;
-    }
-
-    if let Some(coarse_fine_diff) = f.coarse_fine_diff {
-        indent(writer, offset + 1)?;
-        write!(writer,
-               "<COARSE_FINE_DIFF>{}</COARSE_FINE_DIFF>\n",
-               coarse_fine_diff)
-            ?;
-    }
-
-    if let Some(moisture) = f.moisture {
-        indent(writer, offset + 1)?;
-        write!(writer, "<MOISTURE>{}</MOISTURE>\n", moisture)?;
-    }
-
-    if let Some(diastatic_power) = f.diastatic_power {
-        indent(writer, offset + 1)?;
-        write!(writer,
-               "<DIASTATIC_POWER>{}</DIASTATIC_POWER>\n",
-               diastatic_power)
-            ?;
-    }
-
-    if let Some(proteine) = f.proteine {
-        indent(writer, offset + 1)?;
-        write!(writer, "<PROTEINE>{}</PROTEINE>\n", proteine)?;
-    }
-
-    if let Some(max_in_batch) = f.max_in_batch {
-        indent(writer, offset + 1)?;
-        write!(writer, "<MAX_IN_BATCH>{}</MAX_IN_BATCH>\n", max_in_batch)?;
-    }
-
-    if f.recommended_mash {
-        indent(writer, offset + 1)?;
-        write!(writer,
-               "<RECOMMENDED_MASH>{}</RECOMMENDED_MASH>\n",
-               f.recommended_mash)
-            ?;
-    }
-
-    if let Some(ibu_gal_per_lb) = f.ibu_gal_per_lb {
-        indent(writer, offset + 1)?;
-        write!(writer,
-               "<IBU_GAL_PER_LB>{}</IBU_GAL_PER_LB>\n",
-               ibu_gal_per_lb)
-            ?;
-    }
-
-    indent(writer, offset)?;
-    writer.write_all(b"</FERMENTABLE>\n")?;
+fn write_hop<T>(writer: &mut T, f: &Hop, offset: usize) -> Result<()> {
+    // TODO
     Ok(())
 }
 
@@ -129,6 +96,22 @@ fn write_fermentables<T>(writer: &mut T,
     Ok(())
 }
 
+fn write_hops<T>(writer: &mut T,
+                         v: &HashMap<String, Hop>,
+                         offset: usize)
+                         -> Result<()>
+    where T: Write
+{
+    indent(writer, offset)?;
+    writer.write_all(b"<HOPS>\n")?;
+    for f in v.values() {
+        write_hop(writer, f, offset + 1)?;
+    }
+    indent(writer, offset)?;
+    writer.write_all(b"</HOPS>\n")?;
+    Ok(())
+}
+
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
@@ -140,6 +123,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     match *set {
         RecordSet::Empty => Ok(()),
         RecordSet::Fermentables(ref v) => write_fermentables(writer, v, 0),
+        RecordSet::Hops(ref v) => write_hops(writer, v, 0),
     }
 }
 
