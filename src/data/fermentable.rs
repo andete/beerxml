@@ -26,8 +26,8 @@ impl Default for FermentableType {
 }
 
 impl FermentableType {
-    pub fn make(name: &str) -> Result<FermentableType> {
-        match name {
+    pub fn make(name: String) -> Result<FermentableType> {
+        match name.as_str() {
             "Grain" => Ok(FermentableType::Grain),
             "Sugar" => Ok(FermentableType::Sugar),
             "Extract" => Ok(FermentableType::Extract),
@@ -99,7 +99,7 @@ pub struct Fermentable {
     /// the percent protein in the grain.  Only appropriate for
     /// a "Grain" or "Adjunct" type, otherwise this value is ignored
     #[serde(skip_serializing_if="Option::is_none")]
-    pub proteine: Option<f64>,
+    pub protein: Option<f64>,
     /// the recommended maximum percentage (by weight) this
     /// ingredient should represent in a batch of beer
     #[serde(skip_serializing_if="Option::is_none")]
@@ -109,7 +109,7 @@ pub struct Fermentable {
     /// for a "Grain" or "Adjunct" types.  The default value is false.
     /// Note that this does NOT indicate whether the grain is mashed
     /// or not – it is only a recommendation used in recipe formulation
-    pub recommended_mash: bool,
+    pub recommend_mash: bool,
     /// for hopped extracts only - an estimate of the number of IBUs
     /// per pound of extract in a gallon of water.  To convert to IBUs
     /// we multiply this number by the "AMOUNT" field (in pounds)
@@ -118,4 +118,12 @@ pub struct Fermentable {
     /// type, otherwise this value is ignored
     #[serde(skip_serializing_if="Option::is_none")]
     pub ibu_gal_per_lb: Option<f64>,
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub display_amount: Option<String>,
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub inventory: Option<String>,
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub potential: Option<f64>,
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub display_color: Option<String>,        
 }
