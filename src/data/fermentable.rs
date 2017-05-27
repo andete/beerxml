@@ -1,6 +1,8 @@
 // (c) 2017 Joost Yervante Damad
 
 use error::*;
+use std::fmt;
+use std::result;
 
 #[derive(Debug,Serialize,Deserialize)]
 pub enum FermentableType {
@@ -34,15 +36,18 @@ impl FermentableType {
             _ => Err(format!("unknown Fermentable Type {}", name).into()),
         }
     }
+}
 
-    pub fn as_str(&self) -> &'static str {
-        match *self {
+impl fmt::Display for FermentableType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
             FermentableType::Grain => "Grain",
             FermentableType::Sugar => "Sugar",
             FermentableType::Extract => "Extract",
             FermentableType::DryExtract => "Dry Extract",
             FermentableType::Adjunct => "Adjunct",
-        }
+        };
+        write!(f, "{}", x)
     }
 }
 

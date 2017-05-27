@@ -1,5 +1,8 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+use std::fmt;
+use std::result;
+
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Hop {
     // name of the hop
@@ -38,7 +41,7 @@ pub struct Hop {
     pub substitutes:Option<String>,
     /// Humelene leven in percent
     #[serde(skip_serializing_if="Option::is_none")]
-    pub humeline:Option<f64>,
+    pub humulene:Option<f64>,
     /// Caryophyllene leven in percent
     #[serde(skip_serializing_if="Option::is_none")]
     pub caryophyllene:Option<f64>,
@@ -67,6 +70,19 @@ impl Default for HopUse {
     }
 }
 
+impl fmt::Display for HopUse {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            HopUse::Aroma => "Aroma",
+            HopUse::Boil => "Boil",
+            HopUse::DryHop => "Dry Hop",
+            HopUse::FirstWort => "First Wort",
+            HopUse::Mash => "Mash",
+        };
+        write!(f, "{}", x)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum HopType {
     Bittering,
@@ -74,9 +90,31 @@ pub enum HopType {
     Both,
 }
 
+impl fmt::Display for HopType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            HopType::Bittering => "Bittering",
+            HopType::Aroma => "Aroma",
+            HopType::Both => "Both",
+        };
+        write!(f, "{}", x)
+    }
+}
+        
 #[derive(Serialize, Deserialize, Debug)]
 pub enum HopForm {
     Pellet,
     Plug,
     Leaf,
+}
+        
+impl fmt::Display for HopForm {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            HopForm::Pellet => "Pellet",
+            HopForm::Plug => "Plug",
+            HopForm::Leaf => "Leaf",
+        };
+        write!(f, "{}", x)
+    }
 }
