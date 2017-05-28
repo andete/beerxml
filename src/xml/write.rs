@@ -80,8 +80,11 @@ fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Resul
         write_opt(writer, offset, "PROTEIN", &f.protein)?;
         write_opt(writer, offset, "MAX_IN_BATCH", &f.max_in_batch)?;
         write_bool(writer, offset, "RECOMMEND_MASH", f.recommend_mash)?;
-        write_opt(writer, offset, "IBU_GAL_PER_LB", &f.ibu_gal_per_lb)
-            // TODO
+        write_opt(writer, offset, "IBU_GAL_PER_LB", &f.ibu_gal_per_lb)?;
+        write_opt(writer, offset, "DISPLAY_AMOUNT", &f.display_amount)?;
+        write_opt(writer, offset, "INVENTORY", &f.inventory)?;
+        write_opt(writer, offset, "POTENTIAL", &f.potential)?;
+        write_opt(writer, offset, "DISPLAY_COLOR", &f.display_color)
     })
 }
 
