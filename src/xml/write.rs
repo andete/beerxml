@@ -118,8 +118,21 @@ fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
     write_block(writer, offset, "YEAST", |writer, offset| {
         write_tag(writer, offset, "NAME", &y.name)?;
         write_tag(writer, offset, "VERSION", y.version)?;
-        // TODO
-        Ok(())
+        write_tag(writer, offset, "TYPE", &y.type_)?;
+        write_tag(writer, offset, "FORM", &y.form)?;
+        write_tag(writer, offset, "AMOUNT", y.amount)?;
+        write_bool(writer, offset, "AMOUNT_IS_WEIGHT", y.amount_is_weight)?;
+        write_opt(writer, offset, "LABORATORY", &y.laboratory)?;
+        write_opt(writer, offset, "PRODUCT_ID", &y.product_id)?;
+        write_opt(writer, offset, "MIN_TEMPERATURE", &y.min_temperature)?;
+        write_opt(writer, offset, "MAX_TEMPERATURE", &y.max_temperature)?;
+        write_opt(writer, offset, "FLOCCULATION", &y.flocculation)?;
+        write_opt(writer, offset, "ATTENUATION", &y.attenuation)?;
+        write_opt(writer, offset, "NOTES", &y.notes)?;
+        write_opt(writer, offset, "BEST_FOR", &y.best_for)?;
+        write_opt(writer, offset, "TIMES_CULTURED", &y.times_cultured)?;
+        write_opt(writer, offset, "MAX_REUSE", &y.max_reuse)?;
+        write_bool(writer, offset, "ADD_TO_SECONDARY", y.add_to_secondary)
     })
 }
 

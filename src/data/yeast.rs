@@ -1,5 +1,8 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+use std::fmt;
+use std::result;
+
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Yeast {
     // name of the hop
@@ -55,6 +58,19 @@ impl Default for YeastType {
     }
 }
 
+impl fmt::Display for YeastType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            YeastType::Ale => "Ale",
+            YeastType::Lager => "Lager",
+            YeastType::Wheat => "Wheat",
+            YeastType::Wine => "Wine",
+            YeastType::Champagne => "Champagne",
+        };
+        write!(f, "{}", x)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum YeastForm {
     Liquid,
@@ -66,6 +82,17 @@ pub enum YeastForm {
 impl Default for YeastForm {
     fn default() -> YeastForm {
         YeastForm::Liquid
+    }
+}
+impl fmt::Display for YeastForm {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            YeastForm::Liquid => "Liquid",
+            YeastForm::Dry => "Dry",
+            YeastForm::Slate => "Slate",
+            YeastForm::Culture => "Culture",
+        };
+        write!(f, "{}", x)
     }
 }
 
@@ -81,5 +108,17 @@ pub enum YeastFlocculation {
 impl Default for YeastFlocculation {
     fn default() -> YeastFlocculation {
         YeastFlocculation::Low
+    }
+}
+
+impl fmt::Display for YeastFlocculation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            YeastFlocculation::Low => "Low",
+            YeastFlocculation::Medium => "Medium",
+            YeastFlocculation::High => "High",
+            YeastFlocculation::VeryHigh => "Very High",
+        };
+        write!(f, "{}", x)
     }
 }
