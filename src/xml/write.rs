@@ -115,8 +115,12 @@ fn write_hop<T>(writer: &mut T, h: &Hop, offset: usize) -> Result<()>
 fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
     where T:Write
 {
-    // TODO
-    Ok(())
+    write_block(writer, offset, "YEAST", |writer, offset| {
+        write_tag(writer, offset, "NAME", &y.name)?;
+        write_tag(writer, offset, "VERSION", y.version)?;
+        // TODO
+        Ok(())
+    })
 }
 
 fn write_map<E,F,T>(writer: &mut T,
