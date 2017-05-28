@@ -3,6 +3,8 @@
 use std::fmt;
 use std::result;
 
+use error::*;
+
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Yeast {
     // name of the hop
@@ -58,6 +60,19 @@ impl Default for YeastType {
     }
 }
 
+impl YeastType {
+    pub fn make(name:String) -> Result<YeastType> {
+        match name.as_str() {
+            "Ale" => Ok(YeastType::Ale),
+            "Lager" => Ok(YeastType::Lager),
+            "Wheat" => Ok(YeastType::Wheat),
+            "Wine" => Ok(YeastType::Wine),
+            "Champagne" => Ok(YeastType::Champagne),
+            _ => Err(format!("Unknown yeast type {}", name).into()),
+        }
+    }
+}
+
 impl fmt::Display for YeastType {
     fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
         let x = match *self {
@@ -96,6 +111,18 @@ impl fmt::Display for YeastForm {
     }
 }
 
+impl YeastForm {
+    pub fn make(name:String) -> Result<YeastForm> {
+        match name.as_str() {
+            "Liquid" => Ok(YeastForm::Liquid),
+            "Dry" => Ok(YeastForm::Dry),
+            "Slate" => Ok(YeastForm::Slate),
+            "Culture" => Ok(YeastForm::Culture),
+            _ => Err(format!("unknown yeast form {}", name).into()),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum YeastFlocculation {
     Low,
@@ -120,5 +147,16 @@ impl fmt::Display for YeastFlocculation {
             YeastFlocculation::VeryHigh => "Very High",
         };
         write!(f, "{}", x)
+    }
+}
+
+impl YeastFlocculation {
+    pub fn make(name:String) -> Result<YeastFlocculation> {
+        match name.as_str() {
+            "Low" => Ok(YeastFlocculation::Low),
+            "Medium" => Ok(YeastFlocculation::Medium),
+            "High" => Ok(YeastFlocculation::High),
+            _ => Err(format!("unknown yeast flocculation {}", name).into()),
+        }
     }
 }

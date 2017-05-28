@@ -151,6 +151,45 @@ fn read_hop<B>(reader: &mut Reader<B>) -> Result<(String, Hop)>
     Ok((f.name.clone(), f))
 }
 
+fn read_yeast<B>(reader: &mut Reader<B>) -> Result<(String, Yeast)>
+    where B: BufRead
+{
+    let mut buf = vec![];
+    let mut f = Yeast::default();
+    loop {
+        match reader.read_event(&mut buf)? {
+            Event::Start(ref e) => {
+                let name = e.name();
+                match name {
+                    b"NAME" => f.name = read_value(reader, name)?,
+                    b"VERSION" => f.version = read_value_t(reader, name)?,
+                    b"TYPE" => f.type_ = read_value_m(reader, name, YeastType::make)?,
+                    b"FORM" => f.form = read_value_m(reader, name, YeastForm::make)?,
+                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
+                    b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,
+                    b"LABORATORY" => f.laboratory = read_value_o(reader, name)?,
+                    b"PRODUCT_ID" => f.product_id = read_value_o(reader, name)?,
+                    b"MIN_TEMPERATURE" => f.min_temperature = Some(read_value_t(reader, name)?),
+                    b"MAX_TEMPERATURE" => f.max_temperature = Some(read_value_t(reader, name)?),
+                    b"FLOCCULATION" => f.flocculation = Some(read_value_m(reader, name, YeastFlocculation::make)?),
+                    b"ATTENUATION" => f.attenuation = Some(read_value_t(reader, name)?),
+                    b"NOTES" => f.notes = read_value_o(reader, name)?,
+                    b"BEST_FOR" => f.best_for = read_value_o(reader, name)?,
+                    b"TIMES_CULTURED" => f.times_cultured = Some(read_value_t(reader, name)?),
+                    b"MAX_REUSE" => f.max_reuse = Some(read_value_t(reader, name)?),
+                    b"ADD_TO_SECONDARY" => f.add_to_secondary = read_value_b(reader, name)?,
+                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
+                }
+            },
+            Event::End(ref e) if e.name() == b"YEAST" => break,
+            Event::Eof => break,
+            _ => (),
+        }
+        buf.clear();
+    }
+    Ok((f.name.clone(), f))
+}
+
 fn read_map<B,F,T>(reader: &mut Reader<B>, elements_name:&'static str, element_name:&'static str, read_element:F) -> Result<HashMap<String, T>>
     where B: BufRead,
           F:Fn(&mut Reader<B>) -> Result<(String,T)>
@@ -189,12 +228,17 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
             Event::Start(ref e) if e.name() == b"FERMENTABLES" => {
                 let f = read_map(&mut reader, "FERMENTABLES", "FERMENTABLE", read_fermentable)?;
                 rs = RecordSet::Fermentables(f);
-                // info!("Fermentables.: {:?}", f);
+                // info!("Fermentables: {:?}", f);
             }
             Event::Start(ref e) if e.name() == b"HOPS" => {
                 let f = read_map(&mut reader, "HOPS", "HOP", read_hop)?;
                 rs = RecordSet::Hops(f);
-                // info!("Hops.: {:?}", f);
+                // info!("Hops: {:?}", f);
+            }
+            Event::Start(ref e) if e.name() == b"YEASTS" => {
+                let f = read_map(&mut reader, "YEASTS", "YEAST", read_yeast)?;
+                rs = RecordSet::Yeasts(f);
+                // info!("Yeasts: {:?}", f);
             }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
