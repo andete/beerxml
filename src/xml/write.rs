@@ -112,29 +112,24 @@ fn write_hop<T>(writer: &mut T, h: &Hop, offset: usize) -> Result<()>
     })
 }
 
-fn write_fermentables<T>(writer: &mut T,
-                         v: &HashMap<String, Fermentable>,
-                         offset: usize)
-                         -> Result<()>
-    where T: Write
+fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
+    where T:Write
 {
-    write_block(writer, offset, "FERMENTABLES", |writer, offset| {
-        for f in v.values() {
-            write_fermentable(writer, f, offset + 1)?;
-        }
-        Ok(())
-    })
+    // TODO
+    Ok(())
 }
 
-fn write_hops<T>(writer: &mut T,
-                         v: &HashMap<String, Hop>,
-                         offset: usize)
-                         -> Result<()>
-    where T: Write
+fn write_map<E,F,T>(writer: &mut T,
+                    v: &HashMap<String, E>,
+                    offset: usize,
+                    name:&'static str,
+                    write_element:F) -> Result<()>
+    where T: Write,
+          F:Fn(&mut T, &E, usize) -> Result<()>
 {
-    write_block(writer, offset, "HOPS", |writer, offset| {
+    write_block(writer, offset, name, |writer, offset| {
         for f in v.values() {
-            write_hop(writer, f, offset + 1)?;
+            write_element(writer, f, offset + 1)?;
         }
         Ok(())
     })
@@ -150,8 +145,9 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         ?;
     match *set {
         RecordSet::Empty => Ok(()),
-        RecordSet::Fermentables(ref v) => write_fermentables(writer, v, 0),
-        RecordSet::Hops(ref v) => write_hops(writer, v, 0),
+        RecordSet::Fermentables(ref v) => write_map(writer, v, 0, "FERMENTABLES", write_fermentable),
+        RecordSet::Hops(ref v) => write_map(writer, v, 0, "HOPS", write_hop),
+        RecordSet::Yeasts(ref v) => write_map(writer, v, 0, "YEASTS", write_yeast),
     }
 }
 

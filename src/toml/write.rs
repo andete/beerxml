@@ -24,6 +24,11 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
             let s = serde_toml::to_string(v)?;
             write!(writer, "{}", s)?;
         }
+        RecordSet::Yeasts(ref v) => {
+            write!(writer, "document = \"Yeasts\"\n\n")?;
+            let s = serde_toml::to_string(v)?;
+            write!(writer, "{}", s)?;
+        }
     }
     Ok(())
 }
