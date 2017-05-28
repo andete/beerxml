@@ -3,6 +3,8 @@
 use std::fmt;
 use std::result;
 
+use error::*;
+
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Hop {
     // name of the hop
@@ -18,7 +20,7 @@ pub struct Hop {
     #[serde(rename="use")]
     pub use_:HopUse,
     /// time in minutes
-    pub time:i64,
+    pub time:f64,
     /// notes
     #[serde(skip_serializing_if="Option::is_none")]
     pub notes:Option<String>,
@@ -83,6 +85,19 @@ impl fmt::Display for HopUse {
     }
 }
 
+impl HopUse {
+    pub fn make(name:String) -> Result<HopUse> {
+        match name.as_str() {
+            "Aroma" => Ok(HopUse::Aroma),
+            "Boil" => Ok(HopUse::Boil),
+            "Dry Hop" => Ok(HopUse::DryHop),
+            "First Wort" => Ok(HopUse::FirstWort),
+            "Mash" => Ok(HopUse::Mash),
+            _ => Err(format!("Unknown Hop use {}", name).into()),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum HopType {
     Bittering,
@@ -98,6 +113,17 @@ impl fmt::Display for HopType {
             HopType::Both => "Both",
         };
         write!(f, "{}", x)
+    }
+}
+
+impl HopType {
+    pub fn make(name:String) -> Result<HopType> {
+        match name.as_str() {
+            "Bittering" => Ok(HopType::Bittering),
+            "Aroma" => Ok(HopType::Aroma),
+            "Both" => Ok(HopType::Both),
+            _ => Err(format!("Unknown hop type {}", name).into()),
+        }
     }
 }
         
@@ -116,5 +142,16 @@ impl fmt::Display for HopForm {
             HopForm::Leaf => "Leaf",
         };
         write!(f, "{}", x)
+    }
+}
+
+impl HopForm {
+    pub fn make(name:String) -> Result<HopForm> {
+        match name.as_str() {
+            "Pellet" => Ok(HopForm::Pellet),
+            "Plug" => Ok(HopForm::Plug),
+            "Leaf" => Ok(HopForm::Leaf),
+            _ => Err(format!("Unknown hop form {}", name).into()),
+        }
     }
 }

@@ -69,7 +69,7 @@ fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
     }
 }
 
-fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<Fermentable>
+fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<(String, Fermentable)>
     where B: BufRead
 {
     let mut buf = vec![];
@@ -109,30 +109,72 @@ fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<Fermentable>
         }
         buf.clear();
     }
-    Ok(f)
+    Ok((f.name.clone(), f))
 }
 
-fn read_fermentables<B>(reader: &mut Reader<B>) -> Result<HashMap<String, Fermentable>>
+fn read_hop<B>(reader: &mut Reader<B>) -> Result<(String, Hop)>
     where B: BufRead
 {
     let mut buf = vec![];
-    let mut fermentables = HashMap::new();
+    let mut f = Hop::default();
     loop {
         match reader.read_event(&mut buf)? {
-            Event::Start(ref e) if e.name() == b"FERMENTABLE" => {
-                let fermentable = read_fermentable(reader)?;
-                fermentables.insert(fermentable.name.clone(), fermentable);
-            }
             Event::Start(ref e) => {
-                warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
-            }
-            Event::End(ref e) if e.name() == b"FERMENTABLES" => break,
+                let name = e.name();
+                match name {
+                    b"NAME" => f.name = read_value(reader, name)?,
+                    b"VERSION" => f.version = read_value_t(reader, name)?,
+                    b"ALPHA" => f.alpha = read_value_t(reader, name)?,
+                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
+                    b"USE" => f.use_ = read_value_m(reader, name, HopUse::make)?,
+                    b"TIME" => f.time = read_value_t(reader, name)?,
+                    b"NOTES" => f.notes = read_value_o(reader, name)?,
+                    b"TYPE" => f.type_ = Some(read_value_m(reader, name, HopType::make)?),
+                    b"FORM" => f.form = Some(read_value_m(reader, name, HopForm::make)?),
+                    b"BETA" => f.beta = Some(read_value_t(reader, name)?),
+                    b"HSI" => f.hsi = Some(read_value_t(reader, name)?),
+                    b"ORIGIN" => f.origin = read_value_o(reader, name)?,
+                    b"SUBSTITUTES" => f.substitutes = read_value_o(reader, name)?,
+                    b"HUMULENE" => f.humulene = Some(read_value_t(reader, name)?),
+                    b"CARYOPHYLLENE" => f.caryophyllene = Some(read_value_t(reader, name)?),
+                    b"COHUMULONE" => f.cohumulone = Some(read_value_t(reader, name)?),
+                    b"MYRCENE" => f.myrcene = Some(read_value_t(reader, name)?),
+                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
+                }
+            },
+            Event::End(ref e) if e.name() == b"HOP" => break,
             Event::Eof => break,
             _ => (),
         }
         buf.clear();
     }
-    Ok(fermentables)
+    Ok((f.name.clone(), f))
+}
+
+fn read_map<B,F,T>(reader: &mut Reader<B>, elements_name:&'static str, element_name:&'static str, read_element:F) -> Result<HashMap<String, T>>
+    where B: BufRead,
+          F:Fn(&mut Reader<B>) -> Result<(String,T)>
+{
+    let element_name = element_name.as_bytes();
+    let elements_name = elements_name.as_bytes();
+    let mut buf = vec![];
+    let mut map = HashMap::new();
+    loop {
+        match reader.read_event(&mut buf)? {
+            Event::Start(ref e) if e.name() == element_name => {
+                let (name,element) = read_element(reader)?;
+                map.insert(name, element);
+            }
+            Event::Start(ref e) => {
+                warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
+            }
+            Event::End(ref e) if e.name() == elements_name => break,
+            Event::Eof => break,
+            _ => (),
+        }
+        buf.clear();
+    }
+    Ok(map)
 }
 
 pub fn read<B>(reader: B) -> Result<RecordSet>
@@ -145,9 +187,14 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
     loop {
         match reader.read_event(&mut buf)? {
             Event::Start(ref e) if e.name() == b"FERMENTABLES" => {
-                let f = read_fermentables(&mut reader)?;
+                let f = read_map(&mut reader, "FERMENTABLES", "FERMENTABLE", read_fermentable)?;
                 rs = RecordSet::Fermentables(f);
                 // info!("Fermentables.: {:?}", f);
+            }
+            Event::Start(ref e) if e.name() == b"HOPS" => {
+                let f = read_map(&mut reader, "HOPS", "HOP", read_hop)?;
+                rs = RecordSet::Hops(f);
+                // info!("Hops.: {:?}", f);
             }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
