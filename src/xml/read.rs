@@ -195,6 +195,37 @@ fn read_yeast<B>(reader: &mut Reader<B>) -> Result<(String, Yeast)>
     Ok((f.name.clone(), f))
 }
 
+fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
+    where B: BufRead
+{
+    let mut buf = vec![];
+    let mut f = Misc::default();
+    loop {
+        match reader.read_event(&mut buf)? {
+            Event::Start(ref e) => {
+                let name = e.name();
+                match name {
+                    b"NAME" => f.name = read_value(reader, name)?,
+                    b"VERSION" => f.version = read_value_t(reader, name)?,
+                    b"TYPE" => f.type_ = read_value_m(reader, name, MiscType::make)?,
+                    b"USE" => f.use_ = read_value_m(reader, name, MiscUse::make)?,
+                    b"TIME" => f.time = read_value_t(reader, name)?,
+                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
+                    b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,
+                    b"USE_FOR" => f.use_for = read_value_o(reader, name)?,
+                    b"NOTES" => f.notes = read_value_o(reader, name)?,
+                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
+                }
+            },
+            Event::End(ref e) if e.name() == b"MISC" => break,
+            Event::Eof => break,
+            _ => (),
+        }
+        buf.clear();
+    }
+    Ok((f.name.clone(), f))
+}
+
 fn read_map<B,F,T>(reader: &mut Reader<B>, elements_name:&'static str, element_name:&'static str, read_element:F) -> Result<HashMap<String, T>>
     where B: BufRead,
           F:Fn(&mut Reader<B>) -> Result<(String,T)>
@@ -244,6 +275,11 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 let f = read_map(&mut reader, "YEASTS", "YEAST", read_yeast)?;
                 rs = RecordSet::Yeasts(f);
                 // info!("Yeasts: {:?}", f);
+            }
+            Event::Start(ref e) if e.name() == b"MISCS" => {
+                let f = read_map(&mut reader, "MISCS", "MISC", read_misc)?;
+                rs = RecordSet::Miscs(f);
+                // info!("Miscs: {:?}", f);
             }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
