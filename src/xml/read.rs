@@ -214,6 +214,9 @@ fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
                     b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,
                     b"USE_FOR" => f.use_for = read_value_o(reader, name)?,
                     b"NOTES" => f.notes = read_value_o(reader, name)?,
+                    b"DISPLAY_AMOUNT" => f.display_amount = read_value_o(reader, name)?,
+                    b"DISPLAY_TIME" => f.display_time = read_value_o(reader, name)?,
+                    b"INVENTORY" => f.inventory = read_value_o(reader, name)?,
                     _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
                 }
             },

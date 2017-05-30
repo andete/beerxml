@@ -152,7 +152,10 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
         write_tag(writer, offset, "AMOUNT", m.amount)?;
         write_bool(writer, offset, "AMOUNT_IS_WEIGHT", m.amount_is_weight)?;
         write_opt(writer, offset, "USE_FOR", &m.use_for)?;
-        write_opt(writer, offset, "NOTES", &m.notes)
+        write_opt(writer, offset, "NOTES", &m.notes)?;
+        write_opt(writer, offset, "DISPLAY_TIME", &m.display_time)?;
+        write_opt(writer, offset, "DISPLAY_AMOUNT", &m.display_amount)?;
+        write_opt(writer, offset, "INVENTORY", &m.inventory)
     })
 }
 

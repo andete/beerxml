@@ -27,7 +27,13 @@ pub struct Misc {
     /// short description what the ingredient is used for
     pub use_for: Option<String>,
     /// detailed notes
-    pub notes: Option<String>
+    pub notes: Option<String>,
+    /// display string for time
+    pub display_time: Option<String>,
+    /// display string for amount
+    pub display_amount: Option<String>,
+    /// inventory
+    pub inventory: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
