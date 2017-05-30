@@ -64,12 +64,53 @@ impl MiscType {
 impl fmt::Display for MiscType {
     fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
         let x = match *self {
-            YeastType::Spice => "Spice",
-            YeastType::Fining => "Fining",
-            YeastType::WaterAgent => "Water Agent",
-            YeastType::Herb => "Herb",
-            YeastType::Flavor => "Flavor",
-            YeastType::Other => "Other",
+            MiscType::Spice => "Spice",
+            MiscType::Fining => "Fining",
+            MiscType::WaterAgent => "Water Agent",
+            MiscType::Herb => "Herb",
+            MiscType::Flavor => "Flavor",
+            MiscType::Other => "Other",
+        };
+        write!(f, "{}", x)
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum MiscUse {
+    Boil,
+    Mash,
+    Primary,
+    Secondary,
+    Bottling,
+}
+
+impl Default for MiscUse {
+    fn default() -> MiscUse {
+        MiscUse::Boil
+    }
+}
+
+impl MiscUse {
+    pub fn make(name:String) -> Result<MiscUse> {
+        match name.as_str() {
+            "Boil" => Ok(MiscUse::Boil),
+            "Mash" => Ok(MiscUse::Mash),
+            "Primary" => Ok(MiscUse::Primary),
+            "Secondary" => Ok(MiscUse::Secondary),
+            "Bottling" => Ok(MiscUse::Bottling),
+            _ => Err(format!("Unknown misc use {}", name).into()),
+        }
+    }
+}
+
+impl fmt::Display for MiscUse {
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        let x = match *self {
+            MiscUse::Boil => "Boil",
+            MiscUse::Mash => "Mash",
+            MiscUse::Primary => "Primary",
+            MiscUse::Secondary => "Secondary",
+            MiscUse::Bottling => "Bottling",
         };
         write!(f, "{}", x)
     }

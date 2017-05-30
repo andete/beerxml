@@ -140,6 +140,22 @@ fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
         write_opt(writer, offset, "CULTURE_DATE", &y.culture_date)
     })
 }
+fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
+    where T:Write
+{
+    write_block(writer, offset, "MISC", |writer, offset| {
+        write_tag(writer, offset, "NAME", &m.name)?;
+        write_tag(writer, offset, "VERSION", m.version)?;
+        write_tag(writer, offset, "TYPE", &m.type_)?;
+        write_tag(writer, offset, "USE", &m.use_)?;
+        write_tag(writer, offset, "TIME", &m.time)?;
+        write_tag(writer, offset, "AMOUNT", m.amount)?;
+        write_bool(writer, offset, "AMOUNT_IS_WEIGHT", m.amount_is_weight)?;
+        write_opt(writer, offset, "USE_FOR", &m.use_for)?;
+        write_opt(writer, offset, "NOTES", &m.notes)
+    })
+}
+
 
 fn write_map<E,F,T>(writer: &mut T,
                     v: &HashMap<String, E>,
@@ -170,6 +186,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         RecordSet::Fermentables(ref v) => write_map(writer, v, 0, "FERMENTABLES", write_fermentable),
         RecordSet::Hops(ref v) => write_map(writer, v, 0, "HOPS", write_hop),
         RecordSet::Yeasts(ref v) => write_map(writer, v, 0, "YEASTS", write_yeast),
+        RecordSet::Miscs(ref v) => write_map(writer, v, 0, "MISCS", write_misc),
     }
 }
 

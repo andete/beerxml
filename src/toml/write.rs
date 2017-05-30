@@ -12,24 +12,26 @@ use error::*;
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
-    match *set {
-        RecordSet::Empty => (),
+    let s = match *set {
+        RecordSet::Empty => return Ok(()),
         RecordSet::Fermentables(ref v) => {
             write!(writer, "document = \"Fermentables\"\n\n")?;
-            let s = serde_toml::to_string(v)?;
-            write!(writer, "{}", s)?;
+            serde_toml::to_string(v)?
         }
         RecordSet::Hops(ref v) => {
             write!(writer, "document = \"Hops\"\n\n")?;
-            let s = serde_toml::to_string(v)?;
-            write!(writer, "{}", s)?;
+            serde_toml::to_string(v)?
         }
         RecordSet::Yeasts(ref v) => {
             write!(writer, "document = \"Yeasts\"\n\n")?;
-            let s = serde_toml::to_string(v)?;
-            write!(writer, "{}", s)?;
+            serde_toml::to_string(v)?
         }
-    }
+        RecordSet::Miscs(ref v) => {
+            write!(writer, "document = \"Miscs\"\n\n")?;
+            serde_toml::to_string(v)?
+        }
+    };
+    write!(writer, "{}", s)?;
     Ok(())
 }
 
