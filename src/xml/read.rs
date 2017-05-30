@@ -178,6 +178,11 @@ fn read_yeast<B>(reader: &mut Reader<B>) -> Result<(String, Yeast)>
                     b"TIMES_CULTURED" => f.times_cultured = Some(read_value_t(reader, name)?),
                     b"MAX_REUSE" => f.max_reuse = Some(read_value_t(reader, name)?),
                     b"ADD_TO_SECONDARY" => f.add_to_secondary = read_value_b(reader, name)?,
+                    b"DISPLAY_AMOUNT" => f.display_amount = read_value_o(reader, name)?,
+                    b"DISP_MIN_TEMP" => f.display_min_temp = read_value_o(reader, name)?,
+                    b"DISP_MAX_TEMP" => f.display_max_temp = read_value_o(reader, name)?,
+                    b"INVENTORY" => f.inventory = read_value_o(reader, name)?,
+                    b"CULTURE_DATE" => f.culture_date = read_value_o(reader, name)?,
                     _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
                 }
             },

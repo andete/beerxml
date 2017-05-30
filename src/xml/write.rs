@@ -132,7 +132,12 @@ fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
         write_opt(writer, offset, "BEST_FOR", &y.best_for)?;
         write_opt(writer, offset, "TIMES_CULTURED", &y.times_cultured)?;
         write_opt(writer, offset, "MAX_REUSE", &y.max_reuse)?;
-        write_bool(writer, offset, "ADD_TO_SECONDARY", y.add_to_secondary)
+        write_bool(writer, offset, "ADD_TO_SECONDARY", y.add_to_secondary)?;
+        write_opt(writer, offset, "DISPLAY_AMOUNT", &y.display_amount)?;
+        write_opt(writer, offset, "DISP_MIN_TEMP", &y.display_min_temp)?;
+        write_opt(writer, offset, "DISP_MAX_TEMP", &y.display_max_temp)?;
+        write_opt(writer, offset, "INVENTORY", &y.inventory)?;
+        write_opt(writer, offset, "CULTURE_DATE", &y.culture_date)
     })
 }
 

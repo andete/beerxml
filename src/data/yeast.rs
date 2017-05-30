@@ -43,6 +43,16 @@ pub struct Yeast {
     pub max_reuse: Option<i64>,
     /// flag denoting that this yeast was added for a secondary (or later) fermentation as opposed to the primary fermentation.  Useful if one uses two or more yeast strains for a single brew (eg: Lambic).  Default value is false
     pub add_to_secondary: bool,
+    /// amount
+    pub display_amount: Option<String>,
+    /// recommended minimum temperature
+    pub display_min_temp: Option<String>,
+    /// recommended maximum temperature
+    pub display_max_temp: Option<String>,
+    /// inventory
+    pub inventory: Option<String>,
+    /// date the culture was made
+    pub culture_date: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -156,6 +166,7 @@ impl YeastFlocculation {
             "Low" => Ok(YeastFlocculation::Low),
             "Medium" => Ok(YeastFlocculation::Medium),
             "High" => Ok(YeastFlocculation::High),
+            "Very High" => Ok(YeastFlocculation::VeryHigh),
             _ => Err(format!("unknown yeast flocculation {}", name).into()),
         }
     }
