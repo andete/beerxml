@@ -18,7 +18,7 @@ fn indent<T>(writer: &mut T, offset: usize) -> Result<()>
     Ok(())
 }
 
-fn write_tag<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:U) -> Result<()>
+fn write_tag<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:&U) -> Result<()>
     where T:Write, U:Display
 {
     indent(writer, offset + 1)?;
@@ -65,11 +65,11 @@ fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Resul
 {
     write_block(writer, offset, "FERMENTABLE", |writer, offset| {
         write_tag(writer, offset, "NAME", &f.name)?;
-        write_tag(writer, offset, "VERSION", f.version)?;
+        write_tag(writer, offset, "VERSION", &f.version)?;
         write_tag(writer, offset, "TYPE", &f.type_)?;
-        write_tag(writer, offset, "AMOUNT", f.amount)?;
-        write_tag(writer, offset, "YIELD", f.yield_)?;
-        write_tag(writer, offset, "COLOR", f.color)?;
+        write_tag(writer, offset, "AMOUNT", &f.amount)?;
+        write_tag(writer, offset, "YIELD", &f.yield_)?;
+        write_tag(writer, offset, "COLOR", &f.color)?;
         write_bool(writer, offset, "ADD_AFTER_BOIL", f.add_after_boil)?;
         write_opt(writer, offset, "ORIGIN", &f.origin)?;
         write_opt(writer, offset, "SUPPLIER", &f.supplier)?;
@@ -93,11 +93,11 @@ fn write_hop<T>(writer: &mut T, h: &Hop, offset: usize) -> Result<()>
 {
     write_block(writer, offset, "HOP", |writer, offset| {
         write_tag(writer, offset, "NAME", &h.name)?;
-        write_tag(writer, offset, "VERSION", h.version)?;
-        write_tag(writer, offset, "ALPHA", h.alpha)?;
-        write_tag(writer, offset, "AMOUNT", h.amount)?;
+        write_tag(writer, offset, "VERSION", &h.version)?;
+        write_tag(writer, offset, "ALPHA", &h.alpha)?;
+        write_tag(writer, offset, "AMOUNT", &h.amount)?;
         write_tag(writer, offset, "USE", &h.use_)?;
-        write_tag(writer, offset, "TIME", h.time)?;
+        write_tag(writer, offset, "TIME", &h.time)?;
         write_opt(writer, offset, "NOTES", &h.notes)?;
         write_opt(writer, offset, "TYPE", &h.type_)?;
         write_opt(writer, offset, "FORM", &h.form)?;
@@ -117,10 +117,10 @@ fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
 {
     write_block(writer, offset, "YEAST", |writer, offset| {
         write_tag(writer, offset, "NAME", &y.name)?;
-        write_tag(writer, offset, "VERSION", y.version)?;
+        write_tag(writer, offset, "VERSION", &y.version)?;
         write_tag(writer, offset, "TYPE", &y.type_)?;
         write_tag(writer, offset, "FORM", &y.form)?;
-        write_tag(writer, offset, "AMOUNT", y.amount)?;
+        write_tag(writer, offset, "AMOUNT", &y.amount)?;
         write_bool(writer, offset, "AMOUNT_IS_WEIGHT", y.amount_is_weight)?;
         write_opt(writer, offset, "LABORATORY", &y.laboratory)?;
         write_opt(writer, offset, "PRODUCT_ID", &y.product_id)?;
@@ -145,11 +145,11 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
 {
     write_block(writer, offset, "MISC", |writer, offset| {
         write_tag(writer, offset, "NAME", &m.name)?;
-        write_tag(writer, offset, "VERSION", m.version)?;
+        write_tag(writer, offset, "VERSION", &m.version)?;
         write_tag(writer, offset, "TYPE", &m.type_)?;
         write_tag(writer, offset, "USE", &m.use_)?;
         write_tag(writer, offset, "TIME", &m.time)?;
-        write_tag(writer, offset, "AMOUNT", m.amount)?;
+        write_tag(writer, offset, "AMOUNT", &m.amount)?;
         write_bool(writer, offset, "AMOUNT_IS_WEIGHT", m.amount_is_weight)?;
         write_opt(writer, offset, "USE_FOR", &m.use_for)?;
         write_opt(writer, offset, "NOTES", &m.notes)?;
@@ -158,7 +158,6 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
         write_opt(writer, offset, "INVENTORY", &m.inventory)
     })
 }
-
 
 fn write_map<E,F,T>(writer: &mut T,
                     v: &HashMap<String, E>,
