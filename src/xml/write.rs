@@ -167,7 +167,7 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
 fn write_water<T>(writer: &mut T, w: &Water, offset: usize) -> Result<()>
     where T: Write
 {
-     write_block(writer, offset, "WATER", |writer, offset| {
+    write_block(writer, offset, "WATER", |writer, offset| {
         write_tag(writer, offset, "NAME", &w.name)?;
         write_tag(writer, offset, "VERSION", &w.version)?;
         write_tag(writer, offset, "AMOUNT", &w.amount)?;

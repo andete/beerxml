@@ -24,23 +24,23 @@ fn read_str(s: &str) -> Result<RecordSet> {
         "Fermentables" => {
             let h: HashMap<String, Fermentable> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Fermentables(h))
-        },
+        }
         "Hops" => {
             let h: HashMap<String, Hop> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Hops(h))
-        },
+        }
         "Miscs" => {
             let h: HashMap<String, Misc> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Miscs(h))
-        },
+        }
         "Waters" => {
             let h: HashMap<String, Water> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Waters(h))
-        },
+        }
         "Yeasts" => {
             let h: HashMap<String, Yeast> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Yeasts(h))
-        },
+        }
         e => Err(format!("Toml: Unimplemented document type {}", e).into()),
     }
 }
