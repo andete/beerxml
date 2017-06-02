@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::io::{BufRead, BufReader};
 use std::fs::File;
 use std::path::Path;
-use std::str::{from_utf8,FromStr};
+use std::str::{from_utf8, FromStr};
 
 use quick_xml::reader::Reader;
 use quick_xml::events::Event;
@@ -41,9 +41,9 @@ fn read_value_o<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<String>
     Ok(Some(v))
 }
 
-fn read_value_t<B,T>(reader: &mut Reader<B>, name: &[u8]) -> Result<T>
+fn read_value_t<B, T>(reader: &mut Reader<B>, name: &[u8]) -> Result<T>
     where B: BufRead,
-          T:FromStr,
+          T: FromStr,
           Error: ::std::convert::From<<T as FromStr>::Err>
 {
     let v = read_value(reader, name)?;
@@ -95,7 +95,7 @@ fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<(String, Fermentable)>
                     b"DISPLAY_COLOR" => f.display_color = Some(read_value_t(reader, name)?),
                     _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
                 }
-            },
+            }
             Event::End(ref e) if e.name() == b"FERMENTABLE" => break,
             Event::Eof => break,
             _ => (),
@@ -134,7 +134,7 @@ fn read_hop<B>(reader: &mut Reader<B>) -> Result<(String, Hop)>
                     b"MYRCENE" => f.myrcene = Some(read_value_t(reader, name)?),
                     _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
                 }
-            },
+            }
             Event::End(ref e) if e.name() == b"HOP" => break,
             Event::Eof => break,
             _ => (),
@@ -178,7 +178,7 @@ fn read_yeast<B>(reader: &mut Reader<B>) -> Result<(String, Yeast)>
                     b"CULTURE_DATE" => f.culture_date = read_value_o(reader, name)?,
                     _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
                 }
-            },
+            }
             Event::End(ref e) if e.name() == b"YEAST" => break,
             Event::Eof => break,
             _ => (),
@@ -212,7 +212,7 @@ fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
                     b"INVENTORY" => f.inventory = read_value_o(reader, name)?,
                     _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
                 }
-            },
+            }
             Event::End(ref e) if e.name() == b"MISC" => break,
             Event::Eof => break,
             _ => (),
@@ -222,9 +222,13 @@ fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
     Ok((f.name.clone(), f))
 }
 
-fn read_map<B,F,T>(reader: &mut Reader<B>, elements_name:&'static str, element_name:&'static str, read_element:F) -> Result<HashMap<String, T>>
+fn read_map<B, F, T>(reader: &mut Reader<B>,
+                     elements_name: &'static str,
+                     element_name: &'static str,
+                     read_element: F)
+                     -> Result<HashMap<String, T>>
     where B: BufRead,
-          F:Fn(&mut Reader<B>) -> Result<(String,T)>
+          F: Fn(&mut Reader<B>) -> Result<(String, T)>
 {
     let element_name = element_name.as_bytes();
     let elements_name = elements_name.as_bytes();
@@ -233,7 +237,7 @@ fn read_map<B,F,T>(reader: &mut Reader<B>, elements_name:&'static str, element_n
     loop {
         match reader.read_event(&mut buf)? {
             Event::Start(ref e) if e.name() == element_name => {
-                let (name,element) = read_element(reader)?;
+                let (name, element) = read_element(reader)?;
                 map.insert(name, element);
             }
             Event::Start(ref e) => {

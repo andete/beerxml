@@ -36,7 +36,7 @@ impl FromStr for FermentableType {
             "Extract" => Ok(FermentableType::Extract),
             "Dry Extract" => Ok(FermentableType::DryExtract),
             "Adjunct" => Ok(FermentableType::Adjunct),
-            _ => Err(ErrorKind::ParseError("FermentableType".into(), name.into()).into())
+            _ => Err(ErrorKind::ParseError("FermentableType".into(), name.into()).into()),
         }
     }
 }
@@ -133,5 +133,5 @@ pub struct Fermentable {
     pub potential: Option<f64>,
     /// a display version of the color (BeerSmith extension?)
     #[serde(skip_serializing_if="Option::is_none")]
-    pub display_color: Option<String>,        
+    pub display_color: Option<String>,
 }

@@ -18,16 +18,17 @@ fn indent<T>(writer: &mut T, offset: usize) -> Result<()>
     Ok(())
 }
 
-fn write_tag<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:&U) -> Result<()>
-    where T:Write, U:Display
+fn write_tag<T, U>(writer: &mut T, offset: usize, tag: &'static str, value: &U) -> Result<()>
+    where T: Write,
+          U: Display
 {
     indent(writer, offset + 1)?;
     write!(writer, "<{}>{}</{}>\n", tag, value, tag)?;
     Ok(())
 }
 
-fn write_bool<T>(writer:&mut T, offset:usize, tag:&'static str, value:bool) -> Result<()>
-    where T:Write
+fn write_bool<T>(writer: &mut T, offset: usize, tag: &'static str, value: bool) -> Result<()>
+    where T: Write
 {
     if value {
         indent(writer, offset + 1)?;
@@ -38,8 +39,13 @@ fn write_bool<T>(writer:&mut T, offset:usize, tag:&'static str, value:bool) -> R
 
 
 
-fn write_opt<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:&Option<U>) -> Result<()>
-    where T: Write, U:Display
+fn write_opt<T, U>(writer: &mut T,
+                   offset: usize,
+                   tag: &'static str,
+                   value: &Option<U>)
+                   -> Result<()>
+    where T: Write,
+          U: Display
 {
     if let Some(ref value) = *value {
         indent(writer, offset + 1)?;
@@ -48,15 +54,15 @@ fn write_opt<T,U>(writer:&mut T, offset:usize, tag:&'static str, value:&Option<U
     Ok(())
 }
 
-fn write_block<F,T>(writer: &mut T, offset: usize, tag:&'static str, containing:F) -> Result<()>
+fn write_block<F, T>(writer: &mut T, offset: usize, tag: &'static str, containing: F) -> Result<()>
     where T: Write,
           F: Fn(&mut T, usize) -> Result<()>
 {
     indent(writer, offset)?;
-    write!(writer,"<{}>\n", tag)?;
-    containing(writer, offset+1)?;
+    write!(writer, "<{}>\n", tag)?;
+    containing(writer, offset + 1)?;
     indent(writer, offset)?;
-    write!(writer,"</{}>\n", tag)?;
+    write!(writer, "</{}>\n", tag)?;
     Ok(())
 }
 
@@ -89,7 +95,7 @@ fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Resul
 }
 
 fn write_hop<T>(writer: &mut T, h: &Hop, offset: usize) -> Result<()>
-    where T:Write
+    where T: Write
 {
     write_block(writer, offset, "HOP", |writer, offset| {
         write_tag(writer, offset, "NAME", &h.name)?;
@@ -113,7 +119,7 @@ fn write_hop<T>(writer: &mut T, h: &Hop, offset: usize) -> Result<()>
 }
 
 fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
-    where T:Write
+    where T: Write
 {
     write_block(writer, offset, "YEAST", |writer, offset| {
         write_tag(writer, offset, "NAME", &y.name)?;
@@ -141,7 +147,7 @@ fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
     })
 }
 fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
-    where T:Write
+    where T: Write
 {
     write_block(writer, offset, "MISC", |writer, offset| {
         write_tag(writer, offset, "NAME", &m.name)?;
@@ -159,18 +165,19 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
     })
 }
 fn write_water<T>(_writer: &mut T, _w: &Water, _offset: usize) -> Result<()>
-    where T:Write
+    where T: Write
 {
     Ok(()) // TODO
 }
 
-fn write_map<E,F,T>(writer: &mut T,
-                    v: &HashMap<String, E>,
-                    offset: usize,
-                    name:&'static str,
-                    write_element:F) -> Result<()>
+fn write_map<E, F, T>(writer: &mut T,
+                      v: &HashMap<String, E>,
+                      offset: usize,
+                      name: &'static str,
+                      write_element: F)
+                      -> Result<()>
     where T: Write,
-          F:Fn(&mut T, &E, usize) -> Result<()>
+          F: Fn(&mut T, &E, usize) -> Result<()>
 {
     write_block(writer, offset, name, |writer, offset| {
         for f in v.values() {
@@ -191,7 +198,9 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         ?;
     match *set {
         RecordSet::Empty => Ok(()),
-        RecordSet::Fermentables(ref v) => write_map(writer, v, 0, "FERMENTABLES", write_fermentable),
+        RecordSet::Fermentables(ref v) => {
+            write_map(writer, v, 0, "FERMENTABLES", write_fermentable)
+        }
         RecordSet::Hops(ref v) => write_map(writer, v, 0, "HOPS", write_hop),
         RecordSet::Yeasts(ref v) => write_map(writer, v, 0, "YEASTS", write_yeast),
         RecordSet::Miscs(ref v) => write_map(writer, v, 0, "MISCS", write_misc),

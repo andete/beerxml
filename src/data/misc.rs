@@ -11,17 +11,17 @@ use error::*;
 pub struct Misc {
     /// name of the misc item
     #[serde(skip)]
-    pub name:String,
+    pub name: String,
     /// version of the misc format (normally 1)
-    pub version:i64,
+    pub version: i64,
     /// misc type
     #[serde(rename="type")]
-    pub type_:MiscType,
+    pub type_: MiscType,
     /// misc type
     #[serde(rename="use")]
-    pub use_:MiscUse,
+    pub use_: MiscUse,
     /// time in minutes it is used
-    pub time:f64,
+    pub time: f64,
     /// amount (liter or kg)
     pub amount: f64,
     /// if amount is in kg
@@ -64,7 +64,7 @@ impl Default for MiscType {
 
 impl FromStr for MiscType {
     type Err = Error;
-    fn from_str(name:&str) -> Result<MiscType> {
+    fn from_str(name: &str) -> Result<MiscType> {
         match name {
             "Spice" => Ok(MiscType::Spice),
             "Fining" => Ok(MiscType::Fining),
@@ -72,7 +72,7 @@ impl FromStr for MiscType {
             "Herb" => Ok(MiscType::Herb),
             "Flavor" => Ok(MiscType::Flavor),
             "Other" => Ok(MiscType::Other),
-            _ => Err(ErrorKind::ParseError("MiscType".into(), name.into()).into())
+            _ => Err(ErrorKind::ParseError("MiscType".into(), name.into()).into()),
         }
     }
 }
@@ -114,14 +114,14 @@ impl Default for MiscUse {
 
 impl FromStr for MiscUse {
     type Err = Error;
-    fn from_str(name:&str) -> Result<MiscUse> {
+    fn from_str(name: &str) -> Result<MiscUse> {
         match name {
             "Boil" => Ok(MiscUse::Boil),
             "Mash" => Ok(MiscUse::Mash),
             "Primary" => Ok(MiscUse::Primary),
             "Secondary" => Ok(MiscUse::Secondary),
             "Bottling" => Ok(MiscUse::Bottling),
-            _ => Err(ErrorKind::ParseError("MiscUse".into(), name.into()).into())
+            _ => Err(ErrorKind::ParseError("MiscUse".into(), name.into()).into()),
         }
     }
 }

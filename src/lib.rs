@@ -3,7 +3,7 @@
 #![warn(missing_docs)]
 #![recursion_limit="128"]
 
-//! beerXML/json/yaml/toml parsing and generating library
+//! `beerXML`/json/yaml/toml parsing and generating library
 
 extern crate quick_xml;
 extern crate serde;
@@ -29,7 +29,7 @@ mod tests {
     fn it_works() {}
 }
 
-/// read a beerXML, json, yaml or toml file
+/// read a `beerXML`, json, yaml or toml file
 pub fn read_file(filename: &Path) -> Result<RecordSet> {
     if let Some(ext) = filename.extension() {
         match ext.to_str().unwrap() {
@@ -44,7 +44,7 @@ pub fn read_file(filename: &Path) -> Result<RecordSet> {
     }
 }
 
-/// write a beerXML, json, yaml or toml file
+/// write a `beerXML`, json, yaml or toml file
 pub fn write_file(filename: &Path, set: &RecordSet) -> Result<()> {
     if let Some(ext) = filename.extension() {
         match ext.to_str().unwrap() {

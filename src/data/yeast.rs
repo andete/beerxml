@@ -11,14 +11,14 @@ use error::*;
 pub struct Yeast {
     /// name of the hop
     #[serde(skip)]
-    pub name:String,
+    pub name: String,
     /// version of the yeast format (normally 1)
-    pub version:i64,
+    pub version: i64,
     /// yeast type
     #[serde(rename="type")]
-    pub type_:YeastType,
+    pub type_: YeastType,
     /// yeast form
-    pub form:YeastForm,
+    pub form: YeastForm,
     /// amount (liter or kg)
     pub amount: f64,
     /// if amount is in kg
@@ -80,14 +80,14 @@ impl Default for YeastType {
 
 impl FromStr for YeastType {
     type Err = Error;
-    fn from_str(name:&str) -> Result<YeastType> {
+    fn from_str(name: &str) -> Result<YeastType> {
         match name {
             "Ale" => Ok(YeastType::Ale),
             "Lager" => Ok(YeastType::Lager),
             "Wheat" => Ok(YeastType::Wheat),
             "Wine" => Ok(YeastType::Wine),
             "Champagne" => Ok(YeastType::Champagne),
-            _ => Err(ErrorKind::ParseError("YeastType".into(), name.into()).into())
+            _ => Err(ErrorKind::ParseError("YeastType".into(), name.into()).into()),
         }
     }
 }
@@ -137,13 +137,13 @@ impl fmt::Display for YeastForm {
 
 impl FromStr for YeastForm {
     type Err = Error;
-    fn from_str(name:&str) -> Result<YeastForm> {
+    fn from_str(name: &str) -> Result<YeastForm> {
         match name {
             "Liquid" => Ok(YeastForm::Liquid),
             "Dry" => Ok(YeastForm::Dry),
             "Slate" => Ok(YeastForm::Slate),
             "Culture" => Ok(YeastForm::Culture),
-            _ => Err(ErrorKind::ParseError("YeastForm".into(), name.into()).into())
+            _ => Err(ErrorKind::ParseError("YeastForm".into(), name.into()).into()),
         }
     }
 }
@@ -182,13 +182,13 @@ impl fmt::Display for YeastFlocculation {
 
 impl FromStr for YeastFlocculation {
     type Err = Error;
-    fn from_str(name:&str) -> Result<YeastFlocculation> {
+    fn from_str(name: &str) -> Result<YeastFlocculation> {
         match name {
             "Low" => Ok(YeastFlocculation::Low),
             "Medium" => Ok(YeastFlocculation::Medium),
             "High" => Ok(YeastFlocculation::High),
             "Very High" => Ok(YeastFlocculation::VeryHigh),
-            _ => Err(ErrorKind::ParseError("YeastFlocculation".into(), name.into()).into())
+            _ => Err(ErrorKind::ParseError("YeastFlocculation".into(), name.into()).into()),
         }
     }
 }
