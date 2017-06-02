@@ -4,18 +4,18 @@ use quick_xml::errors as xml;
 
 error_chain! {
     links {
-        Xml(xml::Error, xml::ErrorKind);
+        Xml(xml::Error, xml::ErrorKind) #[doc = "XML error"];
     }
 
     foreign_links {
-        Io(::std::io::Error);
-        Utf8(::std::str::Utf8Error);
-        ParseFloat(::std::num::ParseFloatError);
-        ParseInt(::std::num::ParseIntError);
-        ParseString(::std::string::ParseError);
-        Json(::serde_json::Error);
-        Yaml(::serde_yaml::Error);
-        TomlSer(::serde_toml::ser::Error);
-        TomlDe(::serde_toml::de::Error);
+        Io(::std::io::Error) #[doc = "IO error"];
+        Utf8(::std::str::Utf8Error) #[doc = "Utf8 Error"];
+        ParseFloat(::std::num::ParseFloatError) #[doc = "Parse Float Error"];
+        ParseInt(::std::num::ParseIntError) #[doc = "Parse Int Error"];
+        ParseString(::std::string::ParseError) #[doc = "Parse String Error"];
+        Json(::serde_json::Error) #[doc = "Json Error"];
+        Yaml(::serde_yaml::Error) #[doc = "Yaml Error"];
+        TomlSer(::serde_toml::ser::Error) #[doc = "Toml Serialization Error"];
+        TomlDe(::serde_toml::de::Error) #[doc = "Toml Deserialization Error"];
     }
 }

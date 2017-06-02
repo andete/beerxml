@@ -1,6 +1,7 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
 #![warn(missing_docs)]
+#![recursion_limit="128"]
 
 //! beerXML/json/yaml/toml parsing and generating library
 

@@ -9,6 +9,7 @@ use serde_json;
 use data::*;
 use error::*;
 
+/// try to read a `RecordSet` from a reader that contains json
 pub fn read<B>(reader: B) -> Result<RecordSet>
     where B: BufRead
 {
@@ -16,6 +17,7 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
     Ok(rs)
 }
 
+/// try to read a `RecordSet` from a file that contains json
 pub fn read_file(filename: &Path) -> Result<RecordSet> {
     let f = File::open(filename)?;
     let reader = BufReader::new(f);

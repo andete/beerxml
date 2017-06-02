@@ -15,7 +15,7 @@ struct PrivateDocument {
     document: String,
 }
 
-pub fn read_str(s: &str) -> Result<RecordSet> {
+fn read_str(s: &str) -> Result<RecordSet> {
     let pd: PrivateDocument = serde_toml::from_str(s)?;
     let document = pd.document.as_str();
     let marker = format!("document = \"{}\"", document);
@@ -29,6 +29,7 @@ pub fn read_str(s: &str) -> Result<RecordSet> {
     }
 }
 
+/// try to read a `RecordSet` from a toml file
 pub fn read_file(filename: &Path) -> Result<RecordSet> {
     let mut f = File::open(filename)?;
     let mut contents = String::new();

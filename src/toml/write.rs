@@ -9,6 +9,7 @@ use serde_toml;
 use data::*;
 use error::*;
 
+/// try to write a `RecordSet` as toml to a writer
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
@@ -39,6 +40,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     Ok(())
 }
 
+/// try to write a `RecordSet` as toml to a file
 pub fn write_file(filename: &Path, set: &RecordSet) -> Result<()> {
     let mut f = File::create(filename)?;
     write(&mut f, set)

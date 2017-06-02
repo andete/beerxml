@@ -9,6 +9,7 @@ use serde_yaml;
 use data::*;
 use error::*;
 
+/// try to write a `RecordSet` as yaml to a `writer`
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
@@ -16,6 +17,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     Ok(())
 }
 
+/// try to write a `RecordSet` as yaml to a file
 pub fn write_file(filename: &Path, set: &RecordSet) -> Result<()> {
     let mut f = File::create(filename)?;
     write(&mut f, set)

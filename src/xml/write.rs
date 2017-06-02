@@ -158,7 +158,7 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
         write_opt(writer, offset, "INVENTORY", &m.inventory)
     })
 }
-fn write_water<T>(writer: &mut T, w: &Water, offset: usize) -> Result<()>
+fn write_water<T>(_writer: &mut T, _w: &Water, _offset: usize) -> Result<()>
     where T:Write
 {
     Ok(()) // TODO
@@ -180,6 +180,7 @@ fn write_map<E,F,T>(writer: &mut T,
     })
 }
 
+/// try to write a `RecordSet` to a `writer`
 pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     where T: Write
 {
@@ -198,6 +199,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
     }
 }
 
+/// try to write a `RecordSet` to a file
 pub fn write_file(filename: &Path, set: &RecordSet) -> Result<()> {
     let mut f = File::create(filename)?;
     write(&mut f, set)
