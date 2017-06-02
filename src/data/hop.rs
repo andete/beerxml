@@ -2,6 +2,7 @@
 
 use std::fmt;
 use std::result;
+use std::str::FromStr;
 
 use error::*;
 
@@ -93,16 +94,16 @@ impl fmt::Display for HopUse {
     }
 }
 
-impl HopUse {
-    /// create a `HopUse` from a `String`
-    pub fn new(name:String) -> Result<HopUse> {
-        match name.as_str() {
+impl FromStr for HopUse {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<HopUse> {
+        match name {
             "Aroma" => Ok(HopUse::Aroma),
             "Boil" => Ok(HopUse::Boil),
             "Dry Hop" => Ok(HopUse::DryHop),
             "First Wort" => Ok(HopUse::FirstWort),
             "Mash" => Ok(HopUse::Mash),
-            _ => Err(format!("Unknown Hop use {}", name).into()),
+            _ => Err(ErrorKind::ParseError("HopUse".into(), name.into()).into())
         }
     }
 }
@@ -129,14 +130,14 @@ impl fmt::Display for HopType {
     }
 }
 
-impl HopType {
-    /// create a `HopType` from a `String`
-    pub fn new(name:String) -> Result<HopType> {
-        match name.as_str() {
+impl FromStr for HopType {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<HopType> {
+        match name {
             "Bittering" => Ok(HopType::Bittering),
             "Aroma" => Ok(HopType::Aroma),
             "Both" => Ok(HopType::Both),
-            _ => Err(format!("Unknown hop type {}", name).into()),
+            _ => Err(ErrorKind::ParseError("HopType".into(), name.into()).into())
         }
     }
 }
@@ -163,14 +164,15 @@ impl fmt::Display for HopForm {
     }
 }
 
-impl HopForm {
+impl FromStr for HopForm {
+    type Err = Error;
     /// create a `HopForm` from a `String`
-    pub fn new(name:String) -> Result<HopForm> {
-        match name.as_str() {
+    fn from_str(name:&str) -> Result<HopForm> {
+        match name {
             "Pellet" => Ok(HopForm::Pellet),
             "Plug" => Ok(HopForm::Plug),
             "Leaf" => Ok(HopForm::Leaf),
-            _ => Err(format!("Unknown hop form {}", name).into()),
+            _ => Err(ErrorKind::ParseError("HopForm".into(), name.into()).into())
         }
     }
 }

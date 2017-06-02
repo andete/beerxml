@@ -41,21 +41,14 @@ fn read_value_o<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<String>
     Ok(Some(v))
 }
 
-fn read_value_m<B,F,T>(reader: &mut Reader<B>, name: &[u8], make:F) -> Result<T>
-    where B: BufRead, F:Fn(String) -> Result<T>
-{
-    let v = read_value(reader, name)?;
-    make(v)
-}
-
 fn read_value_t<B,T>(reader: &mut Reader<B>, name: &[u8]) -> Result<T>
     where B: BufRead,
-          T: FromStr,
+          T:FromStr,
           Error: ::std::convert::From<<T as FromStr>::Err>
 {
-    let s = read_value(reader, name)?;
-    let x = s.parse()?;
-    Ok(x)
+    let v = read_value(reader, name)?;
+    let res = v.parse::<T>()?;
+    Ok(res)
 }
 
 fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
@@ -81,7 +74,7 @@ fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<(String, Fermentable)>
                 match name {
                     b"NAME" => f.name = read_value(reader, name)?,
                     b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"TYPE" => f.type_ = read_value_m(reader, name, FermentableType::new)?,
+                    b"TYPE" => f.type_ = read_value_t(reader, name)?,
                     b"AMOUNT" => f.amount = read_value_t(reader, name)?,
                     b"YIELD" => f.yield_ = read_value_t(reader, name)?,
                     b"COLOR" => f.color = read_value_t(reader, name)?,
@@ -126,11 +119,11 @@ fn read_hop<B>(reader: &mut Reader<B>) -> Result<(String, Hop)>
                     b"VERSION" => f.version = read_value_t(reader, name)?,
                     b"ALPHA" => f.alpha = read_value_t(reader, name)?,
                     b"AMOUNT" => f.amount = read_value_t(reader, name)?,
-                    b"USE" => f.use_ = read_value_m(reader, name, HopUse::new)?,
+                    b"USE" => f.use_ = read_value_t(reader, name)?,
                     b"TIME" => f.time = read_value_t(reader, name)?,
                     b"NOTES" => f.notes = read_value_o(reader, name)?,
-                    b"TYPE" => f.type_ = Some(read_value_m(reader, name, HopType::new)?),
-                    b"FORM" => f.form = Some(read_value_m(reader, name, HopForm::new)?),
+                    b"TYPE" => f.type_ = Some(read_value_t(reader, name)?),
+                    b"FORM" => f.form = Some(read_value_t(reader, name)?),
                     b"BETA" => f.beta = Some(read_value_t(reader, name)?),
                     b"HSI" => f.hsi = Some(read_value_t(reader, name)?),
                     b"ORIGIN" => f.origin = read_value_o(reader, name)?,
@@ -163,15 +156,15 @@ fn read_yeast<B>(reader: &mut Reader<B>) -> Result<(String, Yeast)>
                 match name {
                     b"NAME" => f.name = read_value(reader, name)?,
                     b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"TYPE" => f.type_ = read_value_m(reader, name, YeastType::new)?,
-                    b"FORM" => f.form = read_value_m(reader, name, YeastForm::new)?,
+                    b"TYPE" => f.type_ = read_value_t(reader, name)?,
+                    b"FORM" => f.form = read_value_t(reader, name)?,
                     b"AMOUNT" => f.amount = read_value_t(reader, name)?,
                     b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,
                     b"LABORATORY" => f.laboratory = read_value_o(reader, name)?,
                     b"PRODUCT_ID" => f.product_id = read_value_o(reader, name)?,
                     b"MIN_TEMPERATURE" => f.min_temperature = Some(read_value_t(reader, name)?),
                     b"MAX_TEMPERATURE" => f.max_temperature = Some(read_value_t(reader, name)?),
-                    b"FLOCCULATION" => f.flocculation = Some(read_value_m(reader, name, YeastFlocculation::new)?),
+                    b"FLOCCULATION" => f.flocculation = Some(read_value_t(reader, name)?),
                     b"ATTENUATION" => f.attenuation = Some(read_value_t(reader, name)?),
                     b"NOTES" => f.notes = read_value_o(reader, name)?,
                     b"BEST_FOR" => f.best_for = read_value_o(reader, name)?,
@@ -207,8 +200,8 @@ fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
                 match name {
                     b"NAME" => f.name = read_value(reader, name)?,
                     b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"TYPE" => f.type_ = read_value_m(reader, name, MiscType::new)?,
-                    b"USE" => f.use_ = read_value_m(reader, name, MiscUse::new)?,
+                    b"TYPE" => f.type_ = read_value_t(reader, name)?,
+                    b"USE" => f.use_ = read_value_t(reader, name)?,
                     b"TIME" => f.time = read_value_t(reader, name)?,
                     b"AMOUNT" => f.amount = read_value_t(reader, name)?,
                     b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,

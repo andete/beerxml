@@ -2,6 +2,7 @@
 
 use std::fmt;
 use std::result;
+use std::str::FromStr;
 
 use error::*;
 
@@ -61,17 +62,17 @@ impl Default for MiscType {
     }
 }
 
-impl MiscType {
-    /// try to create a `MiscType` from a `String`
-    pub fn new(name:String) -> Result<MiscType> {
-        match name.as_str() {
+impl FromStr for MiscType {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<MiscType> {
+        match name {
             "Spice" => Ok(MiscType::Spice),
             "Fining" => Ok(MiscType::Fining),
             "Water Agent" => Ok(MiscType::WaterAgent),
             "Herb" => Ok(MiscType::Herb),
             "Flavor" => Ok(MiscType::Flavor),
             "Other" => Ok(MiscType::Other),
-            _ => Err(format!("Unknown misc type {}", name).into()),
+            _ => Err(ErrorKind::ParseError("MiscType".into(), name.into()).into())
         }
     }
 }
@@ -111,16 +112,16 @@ impl Default for MiscUse {
     }
 }
 
-impl MiscUse {
-    /// try to make a `MiscUse` from a `String`
-    pub fn new(name:String) -> Result<MiscUse> {
-        match name.as_str() {
+impl FromStr for MiscUse {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<MiscUse> {
+        match name {
             "Boil" => Ok(MiscUse::Boil),
             "Mash" => Ok(MiscUse::Mash),
             "Primary" => Ok(MiscUse::Primary),
             "Secondary" => Ok(MiscUse::Secondary),
             "Bottling" => Ok(MiscUse::Bottling),
-            _ => Err(format!("Unknown misc use {}", name).into()),
+            _ => Err(ErrorKind::ParseError("MiscUse".into(), name.into()).into())
         }
     }
 }

@@ -2,6 +2,7 @@
 
 use std::fmt;
 use std::result;
+use std::str::FromStr;
 
 use error::*;
 
@@ -77,16 +78,16 @@ impl Default for YeastType {
     }
 }
 
-impl YeastType {
-    /// create a `YeastType` from a `String`
-    pub fn new(name:String) -> Result<YeastType> {
-        match name.as_str() {
+impl FromStr for YeastType {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<YeastType> {
+        match name {
             "Ale" => Ok(YeastType::Ale),
             "Lager" => Ok(YeastType::Lager),
             "Wheat" => Ok(YeastType::Wheat),
             "Wine" => Ok(YeastType::Wine),
             "Champagne" => Ok(YeastType::Champagne),
-            _ => Err(format!("Unknown yeast type {}", name).into()),
+            _ => Err(ErrorKind::ParseError("YeastType".into(), name.into()).into())
         }
     }
 }
@@ -134,15 +135,15 @@ impl fmt::Display for YeastForm {
     }
 }
 
-impl YeastForm {
-    /// create a `YeastForm` from a `String`
-    pub fn new(name:String) -> Result<YeastForm> {
-        match name.as_str() {
+impl FromStr for YeastForm {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<YeastForm> {
+        match name {
             "Liquid" => Ok(YeastForm::Liquid),
             "Dry" => Ok(YeastForm::Dry),
             "Slate" => Ok(YeastForm::Slate),
             "Culture" => Ok(YeastForm::Culture),
-            _ => Err(format!("unknown yeast form {}", name).into()),
+            _ => Err(ErrorKind::ParseError("YeastForm".into(), name.into()).into())
         }
     }
 }
@@ -179,15 +180,15 @@ impl fmt::Display for YeastFlocculation {
     }
 }
 
-impl YeastFlocculation {
-    /// create a `YeastFlocculation` from a `String`
-    pub fn new(name:String) -> Result<YeastFlocculation> {
-        match name.as_str() {
+impl FromStr for YeastFlocculation {
+    type Err = Error;
+    fn from_str(name:&str) -> Result<YeastFlocculation> {
+        match name {
             "Low" => Ok(YeastFlocculation::Low),
             "Medium" => Ok(YeastFlocculation::Medium),
             "High" => Ok(YeastFlocculation::High),
             "Very High" => Ok(YeastFlocculation::VeryHigh),
-            _ => Err(format!("unknown yeast flocculation {}", name).into()),
+            _ => Err(ErrorKind::ParseError("YeastFlocculation".into(), name.into()).into())
         }
     }
 }

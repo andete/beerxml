@@ -3,6 +3,7 @@
 use error::*;
 use std::fmt;
 use std::result;
+use std::str::FromStr;
 
 /// a fermentable type
 #[derive(Debug,Serialize,Deserialize)]
@@ -26,16 +27,16 @@ impl Default for FermentableType {
     }
 }
 
-impl FermentableType {
-    /// try to make a `FermentableType` from a `String`
-    pub fn new(name: String) -> Result<FermentableType> {
-        match name.as_str() {
+impl FromStr for FermentableType {
+    type Err = Error;
+    fn from_str(name: &str) -> Result<FermentableType> {
+        match name {
             "Grain" => Ok(FermentableType::Grain),
             "Sugar" => Ok(FermentableType::Sugar),
             "Extract" => Ok(FermentableType::Extract),
             "Dry Extract" => Ok(FermentableType::DryExtract),
             "Adjunct" => Ok(FermentableType::Adjunct),
-            _ => Err(format!("unknown Fermentable Type {}", name).into()),
+            _ => Err(ErrorKind::ParseError("FermentableType".into(), name.into()).into())
         }
     }
 }

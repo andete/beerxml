@@ -3,6 +3,15 @@
 use quick_xml::errors as xml;
 
 error_chain! {
+
+    errors {
+        /// Parsing Error
+        ParseError(what:String, unknown:String) {
+            description("Unable to parse something")
+            display("Unable to parse `{}` as {}", unknown, what)
+        }
+    }
+    
     links {
         Xml(xml::Error, xml::ErrorKind) #[doc = "XML error"];
     }
