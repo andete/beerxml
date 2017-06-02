@@ -24,36 +24,51 @@ pub struct Yeast {
     /// if amount is in kg
     pub amount_is_weight: bool,
     /// name of the producer
+    #[serde(skip_serializing_if="Option::is_none")]
     pub laboratory: Option<String>,
     /// manufacturer product id
+    #[serde(skip_serializing_if="Option::is_none")]
     pub product_id: Option<String>,
     /// minimum recommended temperature for fermenting this yeast strain in degrees Celsius
+    #[serde(skip_serializing_if="Option::is_none")]
     pub min_temperature: Option<f64>,
     /// maximum recommended temperature for fermenting this yeast strain in Celsius
+    #[serde(skip_serializing_if="Option::is_none")]
     pub max_temperature: Option<f64>,
     /// yeast flocculation
+    #[serde(skip_serializing_if="Option::is_none")]
     pub flocculation: Option<YeastFlocculation>,
     /// attenuation of the yeast in percent
+    #[serde(skip_serializing_if="Option::is_none")]
     pub attenuation: Option<f64>,
     /// notes
+    #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,
     /// styles or types of beer this yeast strain is best suited for
+    #[serde(skip_serializing_if="Option::is_none")]
     pub best_for: Option<String>,
     /// number of times this yeast has been reused as a harvested culture.  This number should be zero if this is a product directly from the manufacturer
+    #[serde(skip_serializing_if="Option::is_none")]
     pub times_cultured: Option<i64>,
     /// recommended of times this yeast can be reused (recultured from a previous batch)
+    #[serde(skip_serializing_if="Option::is_none")]
     pub max_reuse: Option<i64>,
     /// flag denoting that this yeast was added for a secondary (or later) fermentation as opposed to the primary fermentation.  Useful if one uses two or more yeast strains for a single brew (eg: Lambic).  Default value is false
     pub add_to_secondary: bool,
     /// amount
+    #[serde(skip_serializing_if="Option::is_none")]
     pub display_amount: Option<String>,
     /// recommended minimum temperature
+    #[serde(skip_serializing_if="Option::is_none")]
     pub display_min_temp: Option<String>,
     /// recommended maximum temperature
+    #[serde(skip_serializing_if="Option::is_none")]
     pub display_max_temp: Option<String>,
     /// inventory
+    #[serde(skip_serializing_if="Option::is_none")]
     pub inventory: Option<String>,
     /// date the culture was made
+    #[serde(skip_serializing_if="Option::is_none")]
     pub culture_date: Option<String>,
 }
 

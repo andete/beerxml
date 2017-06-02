@@ -1,10 +1,5 @@
 // (c) 2017 Joost Yervante Damad
 
-use std::fmt;
-use std::result;
-
-use error::*;
-
 /// water information
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Water {
@@ -28,7 +23,9 @@ pub struct Water {
     /// the amount of Mg in ppm
     pub magnesium: f64,
     /// the pH of the water
+    #[serde(skip_serializing_if="Option::is_none")]
     pub ph: Option<f64>,
     /// notes
+    #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,
 }

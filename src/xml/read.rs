@@ -222,6 +222,39 @@ fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
     Ok((f.name.clone(), f))
 }
 
+fn read_water<B>(reader: &mut Reader<B>) -> Result<(String, Water)>
+    where B: BufRead
+{
+    let mut buf = vec![];
+    let mut f = Water::default();
+    loop {
+        match reader.read_event(&mut buf)? {
+            Event::Start(ref e) => {
+                let name = e.name();
+                match name {
+                    b"NAME" => f.name = read_value(reader, name)?,
+                    b"VERSION" => f.version = read_value_t(reader, name)?,
+                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
+                    b"CALCIUM" => f.calcium = read_value_t(reader, name)?,
+                    b"BICARBONATE" => f.bicarbonate = read_value_t(reader, name)?,
+                    b"SULFATE" => f.sulfate = read_value_t(reader, name)?,
+                    b"CHLORIDE" => f.chloride = read_value_t(reader, name)?,
+                    b"SODIUM" => f.sodium = read_value_t(reader, name)?,
+                    b"MAGNESIUM" => f.magnesium = read_value_t(reader, name)?,
+                    b"PH" => f.ph = Some(read_value_t(reader, name)?),
+                    b"NOTES" => f.notes = read_value_o(reader, name)?,
+                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
+                }
+            }
+            Event::End(ref e) if e.name() == b"WATER" => break,
+            Event::Eof => break,
+            _ => (),
+        }
+        buf.clear();
+    }
+    Ok((f.name.clone(), f))
+}
+
 fn read_map<B, F, T>(reader: &mut Reader<B>,
                      elements_name: &'static str,
                      element_name: &'static str,
@@ -281,6 +314,11 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 let f = read_map(&mut reader, "MISCS", "MISC", read_misc)?;
                 rs = RecordSet::Miscs(f);
                 // info!("Miscs: {:?}", f);
+            }
+            Event::Start(ref e) if e.name() == b"WATERS" => {
+                let f = read_map(&mut reader, "WATERS", "WATER", read_water)?;
+                rs = RecordSet::Waters(f);
+                // info!("Waters: {:?}", f);
             }
             Event::Start(ref e) => {
                 warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
