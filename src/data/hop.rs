@@ -5,9 +5,10 @@ use std::result;
 
 use error::*;
 
+/// a hop
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Hop {
-    // name of the hop
+    /// name of the hop
     #[serde(skip)]
     pub name:String,
     /// version of the fermentable format (normally 1)
@@ -27,6 +28,7 @@ pub struct Hop {
     /// type of hop
     #[serde(rename="type", skip_serializing_if="Option::is_none")]
     pub type_:Option<HopType>,
+    /// form of the hop
     #[serde(skip_serializing_if="Option::is_none")]
     pub form:Option<HopForm>,
     /// percent beta of hops
@@ -55,14 +57,20 @@ pub struct Hop {
     pub myrcene:Option<f64>,
 }
 
+/// the usage of the hop
 #[derive(Serialize, Deserialize, Debug)]
 pub enum HopUse {
+    /// aroma hop usage
     Aroma,
+    /// boil hop usage
     Boil,
+    /// dry-hop hop usage
     #[serde(rename="Dry Hop")]
     DryHop,
+    /// first wort hop usage
     #[serde(rename="First Wort")]
     FirstWort,
+    /// mash hop usage
     Mash,
 }
 
@@ -86,7 +94,8 @@ impl fmt::Display for HopUse {
 }
 
 impl HopUse {
-    pub fn make(name:String) -> Result<HopUse> {
+    /// create a `HopUse` from a `String`
+    pub fn new(name:String) -> Result<HopUse> {
         match name.as_str() {
             "Aroma" => Ok(HopUse::Aroma),
             "Boil" => Ok(HopUse::Boil),
@@ -98,10 +107,14 @@ impl HopUse {
     }
 }
 
+/// the type of a hop
 #[derive(Serialize, Deserialize, Debug)]
 pub enum HopType {
+    /// a bittering hop
     Bittering,
+    /// an aroma hop
     Aroma,
+    /// a dual-purpose hop
     Both,
 }
 
@@ -117,7 +130,8 @@ impl fmt::Display for HopType {
 }
 
 impl HopType {
-    pub fn make(name:String) -> Result<HopType> {
+    /// create a `HopType` from a `String`
+    pub fn new(name:String) -> Result<HopType> {
         match name.as_str() {
             "Bittering" => Ok(HopType::Bittering),
             "Aroma" => Ok(HopType::Aroma),
@@ -126,11 +140,15 @@ impl HopType {
         }
     }
 }
-        
+
+/// the form of a hop
 #[derive(Serialize, Deserialize, Debug)]
 pub enum HopForm {
+    /// pellet hop
     Pellet,
+    /// hop plugs
     Plug,
+    /// leaf hop
     Leaf,
 }
         
@@ -146,7 +164,8 @@ impl fmt::Display for HopForm {
 }
 
 impl HopForm {
-    pub fn make(name:String) -> Result<HopForm> {
+    /// create a `HopForm` from a `String`
+    pub fn new(name:String) -> Result<HopForm> {
         match name.as_str() {
             "Pellet" => Ok(HopForm::Pellet),
             "Plug" => Ok(HopForm::Plug),

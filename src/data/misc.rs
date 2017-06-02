@@ -5,9 +5,10 @@ use std::result;
 
 use error::*;
 
+/// misc beer ingredient
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Misc {
-    // name of the misc item
+    /// name of the misc item
     #[serde(skip)]
     pub name:String,
     /// version of the misc format (normally 1)
@@ -18,7 +19,7 @@ pub struct Misc {
     /// misc type
     #[serde(rename="use")]
     pub use_:MiscUse,
-    // time in minutes it is used
+    /// time in minutes it is used
     pub time:f64,
     /// amount (liter or kg)
     pub amount: f64,
@@ -36,14 +37,21 @@ pub struct Misc {
     pub inventory: Option<String>,
 }
 
+/// misc type
 #[derive(Serialize, Deserialize, Debug)]
 pub enum MiscType {
+    /// a spice
     Spice,
+    /// a fining agent
     Fining,
+    /// a water agent
     #[serde(rename="Water Agent")]
     WaterAgent,
+    /// a herb
     Herb,
+    /// a flavor
     Flavor,
+    /// an other misc item
     Other,
 }
 
@@ -54,7 +62,8 @@ impl Default for MiscType {
 }
 
 impl MiscType {
-    pub fn make(name:String) -> Result<MiscType> {
+    /// try to create a `MiscType` from a `String`
+    pub fn new(name:String) -> Result<MiscType> {
         match name.as_str() {
             "Spice" => Ok(MiscType::Spice),
             "Fining" => Ok(MiscType::Fining),
@@ -81,12 +90,18 @@ impl fmt::Display for MiscType {
     }
 }
 
+/// usage for a misc item
 #[derive(Serialize, Deserialize, Debug)]
 pub enum MiscUse {
+    /// use in boil
     Boil,
+    /// use in mash
     Mash,
+    /// use in primary fermenter
     Primary,
+    /// use in secondary fermenter
     Secondary,
+    /// use at bottling
     Bottling,
 }
 
@@ -97,7 +112,8 @@ impl Default for MiscUse {
 }
 
 impl MiscUse {
-    pub fn make(name:String) -> Result<MiscUse> {
+    /// try to make a `MiscUse` from a `String`
+    pub fn new(name:String) -> Result<MiscUse> {
         match name.as_str() {
             "Boil" => Ok(MiscUse::Boil),
             "Mash" => Ok(MiscUse::Mash),

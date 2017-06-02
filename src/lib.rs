@@ -1,5 +1,9 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
+#![warn(missing_docs)]
+
+//! beerXML/json/yaml/toml parsing and generating library
+
 extern crate quick_xml;
 extern crate serde;
 extern crate serde_json;
@@ -24,6 +28,7 @@ mod tests {
     fn it_works() {}
 }
 
+/// read a beerXML, json, yaml or toml file
 pub fn read_file(filename: &Path) -> Result<RecordSet> {
     if let Some(ext) = filename.extension() {
         match ext.to_str().unwrap() {
@@ -38,6 +43,7 @@ pub fn read_file(filename: &Path) -> Result<RecordSet> {
     }
 }
 
+/// write a beerXML, json, yaml or toml file
 pub fn write_file(filename: &Path, set: &RecordSet) -> Result<()> {
     if let Some(ext) = filename.extension() {
         match ext.to_str().unwrap() {
@@ -52,9 +58,15 @@ pub fn write_file(filename: &Path, set: &RecordSet) -> Result<()> {
     }
 }
 
+/// data structures
 pub mod data;
+/// error handling
 pub mod error;
+/// xml parsing and generating
 pub mod xml;
+/// json parsing and generating
 pub mod json;
+/// toml parsing and generating
 pub mod toml;
+/// yaml parsing and generating
 pub mod yaml;

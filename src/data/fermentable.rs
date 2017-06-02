@@ -4,6 +4,7 @@ use error::*;
 use std::fmt;
 use std::result;
 
+/// a fermentable type
 #[derive(Debug,Serialize,Deserialize)]
 pub enum FermentableType {
     /// grain
@@ -26,7 +27,8 @@ impl Default for FermentableType {
 }
 
 impl FermentableType {
-    pub fn make(name: String) -> Result<FermentableType> {
+    /// try to make a `FermentableType` from a `String`
+    pub fn new(name: String) -> Result<FermentableType> {
         match name.as_str() {
             "Grain" => Ok(FermentableType::Grain),
             "Sugar" => Ok(FermentableType::Sugar),
@@ -51,6 +53,7 @@ impl fmt::Display for FermentableType {
     }
 }
 
+/// a fermentable
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Fermentable {
     /// name of the fermentable
@@ -118,12 +121,16 @@ pub struct Fermentable {
     /// type, otherwise this value is ignored
     #[serde(skip_serializing_if="Option::is_none")]
     pub ibu_gal_per_lb: Option<f64>,
+    /// a display version of the amount (BeerSmith extension?)
     #[serde(skip_serializing_if="Option::is_none")]
     pub display_amount: Option<String>,
+    /// inventory information (BeerSmith extension?)
     #[serde(skip_serializing_if="Option::is_none")]
     pub inventory: Option<String>,
     #[serde(skip_serializing_if="Option::is_none")]
+    /// extract potential (BeerSmith extension?)
     pub potential: Option<f64>,
+    /// a display version of the color (BeerSmith extension?)
     #[serde(skip_serializing_if="Option::is_none")]
     pub display_color: Option<String>,        
 }

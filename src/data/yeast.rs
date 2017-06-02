@@ -5,9 +5,10 @@ use std::result;
 
 use error::*;
 
+/// a yeast
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Yeast {
-    // name of the hop
+    /// name of the hop
     #[serde(skip)]
     pub name:String,
     /// version of the yeast format (normally 1)
@@ -55,12 +56,18 @@ pub struct Yeast {
     pub culture_date: Option<String>,
 }
 
+/// the type of a yeast
 #[derive(Serialize, Deserialize, Debug)]
 pub enum YeastType {
+    /// ale (top-fermenting) yeast
     Ale,
+    /// lager (bottom-fermenting) yeast
     Lager,
+    /// wheat yeast
     Wheat,
+    /// wine yeast
     Wine,
+    /// champage yeast
     Champagne,
 }
 
@@ -71,7 +78,8 @@ impl Default for YeastType {
 }
 
 impl YeastType {
-    pub fn make(name:String) -> Result<YeastType> {
+    /// create a `YeastType` from a `String`
+    pub fn new(name:String) -> Result<YeastType> {
         match name.as_str() {
             "Ale" => Ok(YeastType::Ale),
             "Lager" => Ok(YeastType::Lager),
@@ -96,11 +104,16 @@ impl fmt::Display for YeastType {
     }
 }
 
+/// the form of the yeast
 #[derive(Serialize, Deserialize, Debug)]
 pub enum YeastForm {
+    /// liquid yeast
     Liquid,
+    /// dry yeast
     Dry,
+    /// slated yeast
     Slate,
+    /// a yeast culture
     Culture,
 }
 
@@ -122,7 +135,8 @@ impl fmt::Display for YeastForm {
 }
 
 impl YeastForm {
-    pub fn make(name:String) -> Result<YeastForm> {
+    /// create a `YeastForm` from a `String`
+    pub fn new(name:String) -> Result<YeastForm> {
         match name.as_str() {
             "Liquid" => Ok(YeastForm::Liquid),
             "Dry" => Ok(YeastForm::Dry),
@@ -133,11 +147,16 @@ impl YeastForm {
     }
 }
 
+/// flocculation of a yeast
 #[derive(Serialize, Deserialize, Debug)]
 pub enum YeastFlocculation {
+    /// low flocculation
     Low,
+    /// medium flocculation
     Medium,
+    /// high flocculation
     High,
+    /// very flocculation
     #[serde(rename = "Very High")]
     VeryHigh,
 }
@@ -161,7 +180,8 @@ impl fmt::Display for YeastFlocculation {
 }
 
 impl YeastFlocculation {
-    pub fn make(name:String) -> Result<YeastFlocculation> {
+    /// create a `YeastFlocculation` from a `String`
+    pub fn new(name:String) -> Result<YeastFlocculation> {
         match name.as_str() {
             "Low" => Ok(YeastFlocculation::Low),
             "Medium" => Ok(YeastFlocculation::Medium),

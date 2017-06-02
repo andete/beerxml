@@ -6,17 +6,27 @@ pub use self::fermentable::*;
 pub use self::hop::*;
 pub use self::yeast::*;
 pub use self::misc::*;
+pub use self::water::*;
 
+/// a record set
 #[derive(Serialize, Deserialize, Debug)]
 pub enum RecordSet {
+    /// the default empty record set
     Empty,
+    /// a set of named fermentables
     Fermentables(HashMap<String, Fermentable>),
+    /// a set of named hops
     Hops(HashMap<String, Hop>),
-    Yeasts(HashMap<String, Yeast>),
+    /// a set of named miscelaneous items
     Miscs(HashMap<String, Misc>),
+    /// a set of named water profiles
+    Waters(HashMap<String, Water>),
+    /// a set of named yeasts
+    Yeasts(HashMap<String, Yeast>),
 }
 
 mod fermentable;
 mod hop;
 mod yeast;
 mod misc;
+mod water;
