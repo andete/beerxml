@@ -182,6 +182,13 @@ fn write_water<T>(writer: &mut T, w: &Water, offset: usize) -> Result<()>
     })
 }
 
+fn write_recipe<T>(_writer: &mut T, _r: &Recipe, _offset: usize) -> Result<()>
+    where T: Write
+{
+    // TODO
+    Ok(())
+}
+
 fn write_map<E, F, T>(writer: &mut T,
                       v: &HashMap<String, E>,
                       offset: usize,
@@ -216,6 +223,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         RecordSet::Hops(ref v) => write_map(writer, v, 0, "HOPS", write_hop),
         RecordSet::Yeasts(ref v) => write_map(writer, v, 0, "YEASTS", write_yeast),
         RecordSet::Miscs(ref v) => write_map(writer, v, 0, "MISCS", write_misc),
+        RecordSet::Recipes(ref v) => write_map(writer, v, 0, "RECIPES", write_recipe),
         RecordSet::Waters(ref v) => write_map(writer, v, 0, "WATERS", write_water),
     }
 }

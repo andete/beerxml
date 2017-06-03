@@ -31,6 +31,10 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
             write!(writer, "document = \"Miscs\"\n\n")?;
             serde_toml::to_string(v)?
         }
+        RecordSet::Recipes(ref v) => {
+            write!(writer, "document = \"Recipes\"\n\n")?;
+            serde_toml::to_string(v)?
+        }
         RecordSet::Waters(ref v) => {
             write!(writer, "document = \"Waters\"\n\n")?;
             serde_toml::to_string(v)?

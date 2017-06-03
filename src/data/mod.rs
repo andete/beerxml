@@ -6,6 +6,7 @@ pub use self::fermentable::*;
 pub use self::hop::*;
 pub use self::yeast::*;
 pub use self::misc::*;
+pub use self::recipe::*;
 pub use self::water::*;
 
 /// a record set
@@ -19,6 +20,8 @@ pub enum RecordSet {
     Hops(HashMap<String, Hop>),
     /// a set of named miscelaneous items
     Miscs(HashMap<String, Misc>),
+    /// a set of recipes
+    Recipes(HashMap<String, Recipe>),
     /// a set of named water profiles
     Waters(HashMap<String, Water>),
     /// a set of named yeasts
@@ -29,4 +32,5 @@ mod fermentable;
 mod hop;
 mod yeast;
 mod misc;
+mod recipe;
 mod water;
