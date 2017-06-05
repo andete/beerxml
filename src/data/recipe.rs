@@ -4,6 +4,7 @@
 use std::fmt;
 use std::result;
 use std::str::FromStr;
+use std::collections::HashMap;
 
 use error::*;
 use super::{Fermentable, Hop, Misc, Water, Yeast};
@@ -17,6 +18,7 @@ pub struct Recipe {
     /// version of the recipe format (normally 1)
     pub version: i64,
     /// type of the recipe
+    #[serde(rename="type")]
     pub type_:RecipeType,
     // /// style of the recipe
     // pub style:Style,
@@ -33,17 +35,7 @@ pub struct Recipe {
     /// total boil time in minutes
     pub boil_time: f64,
     /// the percent brewhouse efficiency to be used for estimating the starting gravity of the beer; not required for “Extract” recipes, but is required for “Partial Mash” and “All Grain” recipes
-    pub efficienty: Option<f64>,
-    /// hop ingredient records
-    pub hops: Vec<Hop>,
-    /// fermentable ingredient records
-    pub fermentables: Vec<Fermentable>,
-    /// misc ingredient records
-    pub miscs: Vec<Misc>,
-    /// yeast ingredient records
-    pub yeasts: Vec<Yeast>,
-    /// water info records
-    pub waters: Vec<Water>,
+    pub efficiency: Option<f64>,
     // /// mash profile
     // pub mash: Option<Mash>,
     /// notes
@@ -56,6 +48,17 @@ pub struct Recipe {
     #[serde(skip_serializing_if="Option::is_none")]
     pub fg: Option<f64>,
 
+    // TABLES NEED TO BE LAST TO WORK WITH TOML
+    /// hop ingredient records
+    pub hops: HashMap<String, Hop>,
+    /// fermentable ingredient records
+    pub fermentables: HashMap<String, Fermentable>,
+    /// misc ingredient records
+    pub miscs: HashMap<String, Misc>,
+    /// yeast ingredient records
+    pub yeasts: HashMap<String, Yeast>,
+    /// water info records
+    pub waters: HashMap<String, Water>,
     // TODO: complete
 }
 

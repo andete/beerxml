@@ -4,7 +4,8 @@ use std::collections::HashMap;
 use std::io::{BufRead, BufReader};
 use std::fs::File;
 use std::path::Path;
-use std::str::{from_utf8, FromStr};
+use std::str;
+use std::fmt;
 
 use quick_xml::reader::Reader;
 use quick_xml::events::Event;
@@ -43,13 +44,31 @@ fn read_value_o<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<String>
 
 fn read_value_t<B, T>(reader: &mut Reader<B>, name: &[u8]) -> Result<T>
     where B: BufRead,
-          T: FromStr,
-          Error: ::std::convert::From<<T as FromStr>::Err>
+          T: str::FromStr,
+          Error: ::std::convert::From<<T as str::FromStr>::Err>
 {
     let v = read_value(reader, name)?;
     let res = v.parse::<T>()?;
     Ok(res)
 }
+
+fn read_value_t_o<B, T>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<T>>
+    where B: BufRead,
+          T: str::FromStr,
+          Error: ::std::convert::From<<T as str::FromStr>::Err>,
+          <T as str::FromStr>::Err: fmt::Debug,
+{
+    let v = read_value(reader, name)?;
+    let res = match v.parse::<T>() {
+        Ok(res) => Some(res),
+        Err(e) => {
+            warn!("Ignoring parse error for optional field {} with value {}: {:?}", str::from_utf8(name)?, v, e);
+            None
+        },
+    };
+    Ok(res)
+}
+
 
 fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
     where B: BufRead
@@ -82,41 +101,6 @@ fn read_t<B,F>(reader: &mut Reader<B>, name: &[u8], mut do_element:F) -> Result<
     Ok(())
 }
 
-fn read_recipe<B>(_reader: &mut Reader<B>) -> Result<(String, Recipe)>
-    where B: BufRead
-{
-    Ok(("".into(), Recipe::default()))
-        /* TODO
-    let mut buf = vec![];
-    let mut f = Recipe::default();
-    loop {
-        match reader.read_event(&mut buf)? {
-            Event::Start(ref e) => {
-                let name = e.name();
-                match name {
-                    b"NAME" => f.name = read_value(reader, name)?,
-                    b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
-                    b"CALCIUM" => f.calcium = read_value_t(reader, name)?,
-                    b"BICARBONATE" => f.bicarbonate = read_value_t(reader, name)?,
-                    b"SULFATE" => f.sulfate = read_value_t(reader, name)?,
-                    b"CHLORIDE" => f.chloride = read_value_t(reader, name)?,
-                    b"SODIUM" => f.sodium = read_value_t(reader, name)?,
-                    b"MAGNESIUM" => f.magnesium = read_value_t(reader, name)?,
-                    b"PH" => f.ph = Some(read_value_t(reader, name)?),
-                    b"NOTES" => f.notes = read_value_o(reader, name)?,
-                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
-                }
-            }
-            Event::End(ref e) if e.name() == b"RECIPE" => break,
-            Event::Eof => break,
-            _ => (),
-        }
-        buf.clear();
-    }
-    Ok((f.name.clone(), f))*/
-}
-
 fn read_map<B, F, T>(reader: &mut Reader<B>,
                      elements_name: &'static str,
                      element_name: &'static str,
@@ -136,7 +120,7 @@ fn read_map<B, F, T>(reader: &mut Reader<B>,
                 map.insert(name, element);
             }
             Event::Start(ref e) => {
-                warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
+                warn!("Ignoring: {}", str::from_utf8(e.name()).unwrap());
             }
             Event::End(ref e) if e.name() == elements_name => break,
             Event::Eof => break,
@@ -183,12 +167,12 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 // info!("Waters: {:?}", f);
             }
              Event::Start(ref e) if e.name() == b"RECIPES" => {
-                let f = read_map(&mut reader, "RECIPES", "RECIPE", read_recipe)?;
+                let f = read_map(&mut reader, "RECIPES", "RECIPE", recipe::read)?;
                 rs = RecordSet::Recipes(f);
                 // info!("Recipes: {:?}", f);
             }
             Event::Start(ref e) => {
-                warn!("Ignoring: {}", from_utf8(e.name()).unwrap());
+                read_ignore(&mut reader, e.name())?;
             }
             Event::Eof => break,
             _ => (),
@@ -196,6 +180,25 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
         buf.clear();
     }
     Ok(rs)
+}
+
+fn read_ignore<B>(reader:&mut Reader<B>, name: &[u8]) -> Result<()>
+    where B: BufRead
+{
+    warn!("Ignoring: {}", str::from_utf8(name)?);
+    let mut buf = vec![];
+    loop {
+        match reader.read_event(&mut buf)? {
+            Event::Start(ref e) => {
+                warn!("Ignoring: {}", str::from_utf8(e.name())?);
+            }
+            Event::End(ref e) if e.name() == name => break,
+            Event::Eof => break,
+            _ => (),
+        }
+        buf.clear();
+    }
+    Ok(())
 }
 
 /// try to read a `RecordSet` from a file
@@ -210,3 +213,4 @@ mod hop;
 mod yeast;
 mod misc;
 mod water;
+mod recipe;

@@ -41,6 +41,10 @@ fn read_str(s: &str) -> Result<RecordSet> {
             let h: HashMap<String, Yeast> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Yeasts(h))
         }
+         "Recipes" => {
+            let h: HashMap<String, Recipe> = serde_toml::from_str(&s2)?;
+            Ok(RecordSet::Recipes(h))
+        }
         e => Err(format!("Toml: Unimplemented document type {}", e).into()),
     }
 }
