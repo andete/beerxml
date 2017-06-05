@@ -2,6 +2,7 @@
 
 use std::collections::HashMap;
 
+pub use self::equipment::*;
 pub use self::fermentable::*;
 pub use self::hop::*;
 pub use self::yeast::*;
@@ -31,6 +32,7 @@ pub enum RecordSet {
     Styles(HashMap<String, Style>),
 }
 
+mod equipment;
 mod fermentable;
 mod hop;
 mod yeast;

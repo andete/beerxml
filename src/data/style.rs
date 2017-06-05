@@ -42,20 +42,28 @@ pub struct Style {
     /// maximum recommended color in SRM
     pub color_max: f64,
     /// minimum recommended carbonation for this style in volumes of CO2
+    #[serde(skip_serializing_if="Option::is_none")]
     pub carb_min: Option<f64>,
     /// maximum recommended carbonation for this style in volumes of CO2
+    #[serde(skip_serializing_if="Option::is_none")]
     pub carb_max: Option<f64>,
     /// minimum recommended alcohol by volume as a percentage
+    #[serde(skip_serializing_if="Option::is_none")]
     pub abv_min: Option<f64>,
     /// maximum recommended alcohol by volume as a percentage
+    #[serde(skip_serializing_if="Option::is_none")]
     pub abv_max: Option<f64>,
     /// description of the style, history
+    #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,
     /// flavor and aroma profile for this style
+    #[serde(skip_serializing_if="Option::is_none")]
     pub profile: Option<String>,
     /// suggested ingredients for this style
+    #[serde(skip_serializing_if="Option::is_none")]
     pub ingredients: Option<String>,
     /// example beers of this style
+    #[serde(skip_serializing_if="Option::is_none")]
     pub examples: Option<String>,
 }
 
