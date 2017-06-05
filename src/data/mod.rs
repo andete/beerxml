@@ -5,6 +5,8 @@ use std::collections::HashMap;
 pub use self::equipment::*;
 pub use self::fermentable::*;
 pub use self::hop::*;
+pub use self::mash::*;
+pub use self::mash_step::*;
 pub use self::misc::*;
 pub use self::recipe::*;
 pub use self::style::*;
@@ -35,6 +37,7 @@ pub enum RecordSet {
 mod equipment;
 mod fermentable;
 mod hop;
+mod mash;
 mod mash_step;
 mod misc;
 mod recipe;

@@ -11,7 +11,7 @@ pub struct MashStep {
     /// may be “Infusion”, “Temperature” or “Decoction” depending on the type of step.  Infusion denotes adding hot water, Temperature denotes heating with an outside heat source, and decoction denotes drawing off some mash for boiling
     #[serde(rename="type")]
     pub type_: MashStepType,
-    // the volume of water in liters to infuse in this step.  Required only for infusion steps, though one may also add water for temperature mash steps.  One should not have an infusion amount for decoction steps
+    /// the volume of water in liters to infuse in this step.  Required only for infusion steps, though one may also add water for temperature mash steps.  One should not have an infusion amount for decoction steps
     #[serde(skip_serializing_if="Option::is_none")]
     pub infuse_amount: Option<f64>,
     /// target temperature for this step in degrees Celsius
