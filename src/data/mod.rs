@@ -5,11 +5,11 @@ use std::collections::HashMap;
 pub use self::equipment::*;
 pub use self::fermentable::*;
 pub use self::hop::*;
-pub use self::yeast::*;
 pub use self::misc::*;
 pub use self::recipe::*;
 pub use self::style::*;
 pub use self::water::*;
+pub use self::yeast::*;
 
 /// a record set
 #[derive(Serialize, Deserialize, Debug)]
@@ -35,8 +35,9 @@ pub enum RecordSet {
 mod equipment;
 mod fermentable;
 mod hop;
-mod yeast;
+mod mash_step;
 mod misc;
 mod recipe;
 mod style;
 mod water;
+mod yeast;
