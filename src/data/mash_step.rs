@@ -16,7 +16,7 @@ pub struct MashStep {
     pub infuse_amount: Option<f64>,
     /// target temperature for this step in degrees Celsius
     pub step_temp: f64,
-    /// number of minutes to spend at this step – i.e. the amount of time we are to hold this particular step temperature 
+    /// number of minutes to spend at this step – i.e. the amount of time we are to hold this particular step temperature
     pub step_time: f64,
     /// time in minutes to achieve the desired step temperature – useful particularly for temperature mashes where it may take some time to achieve the step temperature
     #[serde(skip_serializing_if="Option::is_none")]

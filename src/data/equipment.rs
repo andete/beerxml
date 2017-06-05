@@ -41,5 +41,5 @@ pub struct Equipment {
     pub top_up_kettle: Option<f64>,
     /// notes
     #[serde(skip_serializing_if="Option::is_none")]
-    pub notes: Option<String>
+    pub notes: Option<String>,
 }

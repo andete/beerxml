@@ -19,7 +19,7 @@ pub struct Recipe {
     pub version: i64,
     /// type of the recipe
     #[serde(rename="type")]
-    pub type_:RecipeType,
+    pub type_: RecipeType,
     // /// style of the recipe
     // pub style:Style,
     // /// an optional equipment record
@@ -58,8 +58,7 @@ pub struct Recipe {
     /// yeast ingredient records
     pub yeasts: HashMap<String, Yeast>,
     /// water info records
-    pub waters: HashMap<String, Water>,
-    // TODO: complete
+    pub waters: HashMap<String, Water>, // TODO: complete
 }
 
 /// recipe type

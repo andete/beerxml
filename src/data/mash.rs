@@ -10,7 +10,7 @@ pub struct Mash {
     pub name: String,
     /// version of the style format (normally 1)
     pub version: i64,
-    /// the temperature of the grain before adding it to the mash in degrees Celsius 
+    /// the temperature of the grain before adding it to the mash in degrees Celsius
     pub grain_temp: f64,
     /// mash steps
     pub mash_steps: Vec<MashStep>,

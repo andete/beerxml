@@ -41,7 +41,7 @@ fn read_str(s: &str) -> Result<RecordSet> {
             let h: HashMap<String, Yeast> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Yeasts(h))
         }
-         "Recipes" => {
+        "Recipes" => {
             let h: HashMap<String, Recipe> = serde_toml::from_str(&s2)?;
             Ok(RecordSet::Recipes(h))
         }

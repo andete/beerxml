@@ -56,15 +56,18 @@ fn read_value_t_o<B, T>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<T>
     where B: BufRead,
           T: str::FromStr,
           Error: ::std::convert::From<<T as str::FromStr>::Err>,
-          <T as str::FromStr>::Err: fmt::Debug,
+          <T as str::FromStr>::Err: fmt::Debug
 {
     let v = read_value(reader, name)?;
     let res = match v.parse::<T>() {
         Ok(res) => Some(res),
         Err(e) => {
-            warn!("Ignoring parse error for optional field {} with value {}: {:?}", str::from_utf8(name)?, v, e);
+            warn!("Ignoring parse error for optional field {} with value {}: {:?}",
+                  str::from_utf8(name)?,
+                  v,
+                  e);
             None
-        },
+        }
     };
     Ok(res)
 }
@@ -81,9 +84,9 @@ fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
     }
 }
 
-fn read_t<B,F>(reader: &mut Reader<B>, name: &[u8], mut do_element:F) -> Result<()>
+fn read_t<B, F>(reader: &mut Reader<B>, name: &[u8], mut do_element: F) -> Result<()>
     where B: BufRead,
-          F:FnMut(&mut Reader<B>, &[u8]) -> Result<()>
+          F: FnMut(&mut Reader<B>, &[u8]) -> Result<()>
 {
     let mut buf = vec![];
     loop {
@@ -142,7 +145,11 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
     loop {
         match reader.read_event(&mut buf)? {
             Event::Start(ref e) if e.name() == b"FERMENTABLES" => {
-                let f = read_map(&mut reader, "FERMENTABLES", "FERMENTABLE", fermentable::read)?;
+                let f = read_map(&mut reader,
+                                 "FERMENTABLES",
+                                 "FERMENTABLE",
+                                 fermentable::read)
+                    ?;
                 rs = RecordSet::Fermentables(f);
                 // info!("Fermentables: {:?}", f);
             }
@@ -166,7 +173,7 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 rs = RecordSet::Waters(f);
                 // info!("Waters: {:?}", f);
             }
-             Event::Start(ref e) if e.name() == b"RECIPES" => {
+            Event::Start(ref e) if e.name() == b"RECIPES" => {
                 let f = read_map(&mut reader, "RECIPES", "RECIPE", recipe::read)?;
                 rs = RecordSet::Recipes(f);
                 // info!("Recipes: {:?}", f);
@@ -182,7 +189,7 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
     Ok(rs)
 }
 
-fn read_ignore<B>(reader:&mut Reader<B>, name: &[u8]) -> Result<()>
+fn read_ignore<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<()>
     where B: BufRead
 {
     warn!("Ignoring: {}", str::from_utf8(name)?);

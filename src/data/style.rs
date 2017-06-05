@@ -81,7 +81,7 @@ pub enum StyleType {
     /// Mixed style
     Mixed,
     /// Cider
-    Cider
+    Cider,
 }
 
 impl Default for StyleType {
