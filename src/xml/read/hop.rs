@@ -7,7 +7,7 @@ use quick_xml::reader::Reader;
 
 use super::*;
 
-pub fn read_hop<B>(reader: &mut Reader<B>) -> Result<(String, Hop)>
+pub fn read<B>(reader: &mut Reader<B>) -> Result<(String, Hop)>
     where B: BufRead
 {
     let mut f = Hop::default();

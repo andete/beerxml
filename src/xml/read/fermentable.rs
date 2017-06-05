@@ -7,7 +7,7 @@ use quick_xml::reader::Reader;
 
 use super::*;
 
-pub fn read_fermentable<B>(reader: &mut Reader<B>) -> Result<(String, Fermentable)>
+pub fn read<B>(reader: &mut Reader<B>) -> Result<(String, Fermentable)>
     where B: BufRead
 {
     let mut f = Fermentable::default();

@@ -82,118 +82,7 @@ fn read_t<B,F>(reader: &mut Reader<B>, name: &[u8], mut do_element:F) -> Result<
     Ok(())
 }
 
-fn read_yeast<B>(reader: &mut Reader<B>) -> Result<(String, Yeast)>
-    where B: BufRead
-{
-    let mut buf = vec![];
-    let mut f = Yeast::default();
-    loop {
-        match reader.read_event(&mut buf)? {
-            Event::Start(ref e) => {
-                let name = e.name();
-                match name {
-                    b"NAME" => f.name = read_value(reader, name)?,
-                    b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"TYPE" => f.type_ = read_value_t(reader, name)?,
-                    b"FORM" => f.form = read_value_t(reader, name)?,
-                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
-                    b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,
-                    b"LABORATORY" => f.laboratory = read_value_o(reader, name)?,
-                    b"PRODUCT_ID" => f.product_id = read_value_o(reader, name)?,
-                    b"MIN_TEMPERATURE" => f.min_temperature = Some(read_value_t(reader, name)?),
-                    b"MAX_TEMPERATURE" => f.max_temperature = Some(read_value_t(reader, name)?),
-                    b"FLOCCULATION" => f.flocculation = Some(read_value_t(reader, name)?),
-                    b"ATTENUATION" => f.attenuation = Some(read_value_t(reader, name)?),
-                    b"NOTES" => f.notes = read_value_o(reader, name)?,
-                    b"BEST_FOR" => f.best_for = read_value_o(reader, name)?,
-                    b"TIMES_CULTURED" => f.times_cultured = Some(read_value_t(reader, name)?),
-                    b"MAX_REUSE" => f.max_reuse = Some(read_value_t(reader, name)?),
-                    b"ADD_TO_SECONDARY" => f.add_to_secondary = read_value_b(reader, name)?,
-                    b"DISPLAY_AMOUNT" => f.display_amount = read_value_o(reader, name)?,
-                    b"DISP_MIN_TEMP" => f.display_min_temp = read_value_o(reader, name)?,
-                    b"DISP_MAX_TEMP" => f.display_max_temp = read_value_o(reader, name)?,
-                    b"INVENTORY" => f.inventory = read_value_o(reader, name)?,
-                    b"CULTURE_DATE" => f.culture_date = read_value_o(reader, name)?,
-                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
-                }
-            }
-            Event::End(ref e) if e.name() == b"YEAST" => break,
-            Event::Eof => break,
-            _ => (),
-        }
-        buf.clear();
-    }
-    Ok((f.name.clone(), f))
-}
-
-fn read_misc<B>(reader: &mut Reader<B>) -> Result<(String, Misc)>
-    where B: BufRead
-{
-    let mut buf = vec![];
-    let mut f = Misc::default();
-    loop {
-        match reader.read_event(&mut buf)? {
-            Event::Start(ref e) => {
-                let name = e.name();
-                match name {
-                    b"NAME" => f.name = read_value(reader, name)?,
-                    b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"TYPE" => f.type_ = read_value_t(reader, name)?,
-                    b"USE" => f.use_ = read_value_t(reader, name)?,
-                    b"TIME" => f.time = read_value_t(reader, name)?,
-                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
-                    b"AMOUNT_IS_WEIGHT" => f.amount_is_weight = read_value_b(reader, name)?,
-                    b"USE_FOR" => f.use_for = read_value_o(reader, name)?,
-                    b"NOTES" => f.notes = read_value_o(reader, name)?,
-                    b"DISPLAY_AMOUNT" => f.display_amount = read_value_o(reader, name)?,
-                    b"DISPLAY_TIME" => f.display_time = read_value_o(reader, name)?,
-                    b"INVENTORY" => f.inventory = read_value_o(reader, name)?,
-                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
-                }
-            }
-            Event::End(ref e) if e.name() == b"MISC" => break,
-            Event::Eof => break,
-            _ => (),
-        }
-        buf.clear();
-    }
-    Ok((f.name.clone(), f))
-}
-
-fn read_water<B>(reader: &mut Reader<B>) -> Result<(String, Water)>
-    where B: BufRead
-{
-    let mut buf = vec![];
-    let mut f = Water::default();
-    loop {
-        match reader.read_event(&mut buf)? {
-            Event::Start(ref e) => {
-                let name = e.name();
-                match name {
-                    b"NAME" => f.name = read_value(reader, name)?,
-                    b"VERSION" => f.version = read_value_t(reader, name)?,
-                    b"AMOUNT" => f.amount = read_value_t(reader, name)?,
-                    b"CALCIUM" => f.calcium = read_value_t(reader, name)?,
-                    b"BICARBONATE" => f.bicarbonate = read_value_t(reader, name)?,
-                    b"SULFATE" => f.sulfate = read_value_t(reader, name)?,
-                    b"CHLORIDE" => f.chloride = read_value_t(reader, name)?,
-                    b"SODIUM" => f.sodium = read_value_t(reader, name)?,
-                    b"MAGNESIUM" => f.magnesium = read_value_t(reader, name)?,
-                    b"PH" => f.ph = Some(read_value_t(reader, name)?),
-                    b"NOTES" => f.notes = read_value_o(reader, name)?,
-                    _ => warn!("Ignoring: {}", from_utf8(e.name()).unwrap()),
-                }
-            }
-            Event::End(ref e) if e.name() == b"WATER" => break,
-            Event::Eof => break,
-            _ => (),
-        }
-        buf.clear();
-    }
-    Ok((f.name.clone(), f))
-}
-
-fn read_recipe<B>(reader: &mut Reader<B>) -> Result<(String, Recipe)>
+fn read_recipe<B>(_reader: &mut Reader<B>) -> Result<(String, Recipe)>
     where B: BufRead
 {
     Ok(("".into(), Recipe::default()))
@@ -269,27 +158,27 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
     loop {
         match reader.read_event(&mut buf)? {
             Event::Start(ref e) if e.name() == b"FERMENTABLES" => {
-                let f = read_map(&mut reader, "FERMENTABLES", "FERMENTABLE", fermentable::read_fermentable)?;
+                let f = read_map(&mut reader, "FERMENTABLES", "FERMENTABLE", fermentable::read)?;
                 rs = RecordSet::Fermentables(f);
                 // info!("Fermentables: {:?}", f);
             }
             Event::Start(ref e) if e.name() == b"HOPS" => {
-                let f = read_map(&mut reader, "HOPS", "HOP", hop::read_hop)?;
+                let f = read_map(&mut reader, "HOPS", "HOP", hop::read)?;
                 rs = RecordSet::Hops(f);
                 // info!("Hops: {:?}", f);
             }
             Event::Start(ref e) if e.name() == b"YEASTS" => {
-                let f = read_map(&mut reader, "YEASTS", "YEAST", read_yeast)?;
+                let f = read_map(&mut reader, "YEASTS", "YEAST", yeast::read)?;
                 rs = RecordSet::Yeasts(f);
                 // info!("Yeasts: {:?}", f);
             }
             Event::Start(ref e) if e.name() == b"MISCS" => {
-                let f = read_map(&mut reader, "MISCS", "MISC", read_misc)?;
+                let f = read_map(&mut reader, "MISCS", "MISC", misc::read)?;
                 rs = RecordSet::Miscs(f);
                 // info!("Miscs: {:?}", f);
             }
             Event::Start(ref e) if e.name() == b"WATERS" => {
-                let f = read_map(&mut reader, "WATERS", "WATER", read_water)?;
+                let f = read_map(&mut reader, "WATERS", "WATER", water::read)?;
                 rs = RecordSet::Waters(f);
                 // info!("Waters: {:?}", f);
             }
@@ -318,3 +207,6 @@ pub fn read_file(filename: &Path) -> Result<RecordSet> {
 
 mod fermentable;
 mod hop;
+mod yeast;
+mod misc;
+mod water;
