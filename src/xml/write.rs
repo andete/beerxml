@@ -185,8 +185,13 @@ fn write_water<T>(writer: &mut T, w: &Water, offset: usize) -> Result<()>
 fn write_recipe<T>(_writer: &mut T, _r: &Recipe, _offset: usize) -> Result<()>
     where T: Write
 {
-    // TODO
-    Ok(())
+    unimplemented!();
+}
+
+fn write_style<T>(_writer: &mut T, _s: &Style, _offset: usize) -> Result<()>
+    where T: Write
+{
+    unimplemented!();
 }
 
 fn write_map<E, F, T>(writer: &mut T,
@@ -225,6 +230,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         RecordSet::Miscs(ref v) => write_map(writer, v, 0, "MISCS", write_misc),
         RecordSet::Recipes(ref v) => write_map(writer, v, 0, "RECIPES", write_recipe),
         RecordSet::Waters(ref v) => write_map(writer, v, 0, "WATERS", write_water),
+        RecordSet::Styles(ref v) => write_map(writer, v, 0, "STYLES", write_style),
     }
 }
 

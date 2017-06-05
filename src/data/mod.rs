@@ -7,6 +7,7 @@ pub use self::hop::*;
 pub use self::yeast::*;
 pub use self::misc::*;
 pub use self::recipe::*;
+pub use self::style::*;
 pub use self::water::*;
 
 /// a record set
@@ -26,6 +27,8 @@ pub enum RecordSet {
     Waters(HashMap<String, Water>),
     /// a set of named yeasts
     Yeasts(HashMap<String, Yeast>),
+    /// a set of named styles
+    Styles(HashMap<String, Style>),
 }
 
 mod fermentable;
@@ -33,4 +36,5 @@ mod hop;
 mod yeast;
 mod misc;
 mod recipe;
+mod style;
 mod water;

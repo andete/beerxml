@@ -39,6 +39,10 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
             write!(writer, "document = \"Waters\"\n\n")?;
             serde_toml::to_string(v)?
         }
+        RecordSet::Styles(ref v) => {
+            write!(writer, "document = \"Styles\"\n\n")?;
+            serde_toml::to_string(v)?
+        }
     };
     write!(writer, "{}", s)?;
     Ok(())

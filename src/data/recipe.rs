@@ -7,7 +7,7 @@ use std::str::FromStr;
 use std::collections::HashMap;
 
 use error::*;
-use super::{Fermentable, Hop, Misc, Water, Yeast};
+use super::*;
 
 /// a beer recipe
 #[derive(Serialize, Deserialize, Debug, Default)]
