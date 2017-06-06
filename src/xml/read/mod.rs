@@ -178,6 +178,11 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 rs = RecordSet::Recipes(f);
                 // info!("Recipes: {:?}", f);
             }
+             Event::Start(ref e) if e.name() == b"STYLES" => {
+                let f = read_map(&mut reader, "STYLES", "STYLE", style::read)?;
+                rs = RecordSet::Styles(f);
+                // info!("Styles: {:?}", f);
+            }
             Event::Start(ref e) => {
                 read_ignore(&mut reader, e.name())?;
             }
@@ -221,3 +226,4 @@ mod yeast;
 mod misc;
 mod water;
 mod recipe;
+mod style;
