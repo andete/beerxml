@@ -200,6 +200,11 @@ fn write_mash<T>(_writer: &mut T, _s: &Mash, _offset: usize) -> Result<()>
     unimplemented!();
 }
 
+fn write_equipment<T>(_writer: &mut T, _s: &Equipment, _offset: usize) -> Result<()>
+    where T: Write
+{
+    unimplemented!();
+}
 
 fn write_map<E, F, T>(writer: &mut T,
                       v: &HashMap<String, E>,
@@ -229,9 +234,9 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         ?;
     match *set {
         RecordSet::Empty => Ok(()),
-        RecordSet::Fermentables(ref v) => {
-            write_map(writer, v, 0, "FERMENTABLES", write_fermentable)
-        }
+        RecordSet::Equipments(ref v) => write_map(writer, v, 0, "EQUIPMENTS", write_equipment),
+        RecordSet::Fermentables(ref v) => write_map(writer, v, 0, "FERMENTABLES", write_fermentable),
+        
         RecordSet::Hops(ref v) => write_map(writer, v, 0, "HOPS", write_hop),
         RecordSet::Yeasts(ref v) => write_map(writer, v, 0, "YEASTS", write_yeast),
         RecordSet::Miscs(ref v) => write_map(writer, v, 0, "MISCS", write_misc),

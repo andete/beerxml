@@ -228,6 +228,11 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 rs = RecordSet::Mashs(f);
                 // info!("Mashs: {:?}", f);
             }
+            Event::Start(ref e) if e.name() == b"EQUIPMENTS" => {
+                let f = read_map(&mut reader, "EQUIPMENTS", "EQUIPMENT", equipment::read)?;
+                rs = RecordSet::Equipments(f);
+                // info!("Equipments: {:?}", f);
+            }
             Event::Start(ref e) => {
                 read_ignore(&mut reader, e.name())?;
             }
@@ -265,6 +270,7 @@ pub fn read_file(filename: &Path) -> Result<RecordSet> {
     read(reader)
 }
 
+mod equipment;
 mod fermentable;
 mod hop;
 mod yeast;

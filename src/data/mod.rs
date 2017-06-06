@@ -18,6 +18,8 @@ pub use self::yeast::*;
 pub enum RecordSet {
     /// the default empty record set
     Empty,
+    /// a set of named equipments
+    Equipments(HashMap<String, Equipment>),
     /// a set of named fermentables
     Fermentables(HashMap<String, Fermentable>),
     /// a set of named hops

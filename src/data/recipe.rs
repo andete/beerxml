@@ -20,10 +20,10 @@ pub struct Recipe {
     /// type of the recipe
     #[serde(rename="type")]
     pub type_: RecipeType,
-    // /// style of the recipe
-    // pub style:Style,
-    // /// an optional equipment record
-    // pub equiment:Option<Equipment>,
+    /// style of the recipe
+    pub style:Style,
+    /// an optional equipment record
+    pub equipment:Option<Equipment>,
     /// name of the brewer
     pub brewer: String,
     /// optional name of the assistant brewer
@@ -36,8 +36,8 @@ pub struct Recipe {
     pub boil_time: f64,
     /// the percent brewhouse efficiency to be used for estimating the starting gravity of the beer; not required for “Extract” recipes, but is required for “Partial Mash” and “All Grain” recipes
     pub efficiency: Option<f64>,
-    // /// mash profile
-    // pub mash: Option<Mash>,
+    /// mash profile
+    pub mash: Option<Mash>,
     /// notes
     #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,

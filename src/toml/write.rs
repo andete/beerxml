@@ -15,6 +15,10 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
 {
     let s = match *set {
         RecordSet::Empty => return Ok(()),
+        RecordSet::Equipments(ref v) => {
+            write!(writer, "document = \"Equipments\"\n\n")?;
+            serde_toml::to_string(v)?
+        }
         RecordSet::Fermentables(ref v) => {
             write!(writer, "document = \"Fermentables\"\n\n")?;
             serde_toml::to_string(v)?

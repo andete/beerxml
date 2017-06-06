@@ -14,12 +14,15 @@ pub fn read<B>(reader: &mut Reader<B>) -> Result<(String, Recipe)>
                 b"NAME" => f.name = read_value(reader, name)?,
                 b"VERSION" => f.version = read_value_t(reader, name)?,
                 b"TYPE" => f.type_ = read_value_t(reader, name)?,
+                b"STYLE" => f.style = style::read(reader)?.1,
+                b"EQUIPMENT" => f.equipment = Some(equipment::read(reader)?.1),
                 b"BREWER" => f.brewer = read_value_t(reader, name)?,
                 b"ASST_BREWER" => f.asst_brewer = read_value_o(reader, name)?,
                 b"BATCH_SIZE" => f.batch_size = read_value_t(reader, name)?,
                 b"BOIL_SIZE" => f.boil_size = read_value_t(reader, name)?,
                 b"BOIL_TIME" => f.boil_time = read_value_t(reader, name)?,
                 b"EFFICIENCY" => f.efficiency = Some(read_value_t(reader, name)?),
+                b"MASH" => f.mash = Some(mash::read(reader)?.1),
                 b"HOPS" => f.hops = read_map(reader, "HOPS", "HOP", hop::read)?,
                 b"FERMENTABLES" => {
                     f.fermentables =
