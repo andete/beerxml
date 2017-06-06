@@ -194,6 +194,13 @@ fn write_style<T>(_writer: &mut T, _s: &Style, _offset: usize) -> Result<()>
     unimplemented!();
 }
 
+fn write_mash<T>(_writer: &mut T, _s: &Mash, _offset: usize) -> Result<()>
+    where T: Write
+{
+    unimplemented!();
+}
+
+
 fn write_map<E, F, T>(writer: &mut T,
                       v: &HashMap<String, E>,
                       offset: usize,
@@ -231,6 +238,7 @@ pub fn write<T>(writer: &mut T, set: &RecordSet) -> Result<()>
         RecordSet::Recipes(ref v) => write_map(writer, v, 0, "RECIPES", write_recipe),
         RecordSet::Waters(ref v) => write_map(writer, v, 0, "WATERS", write_water),
         RecordSet::Styles(ref v) => write_map(writer, v, 0, "STYLES", write_style),
+        RecordSet::Mashs(ref v) => write_map(writer, v, 0, "MASHS", write_mash),
     }
 }
 

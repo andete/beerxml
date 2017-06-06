@@ -12,8 +12,6 @@ pub struct Mash {
     pub version: i64,
     /// the temperature of the grain before adding it to the mash in degrees Celsius
     pub grain_temp: f64,
-    /// mash steps
-    pub mash_steps: Vec<MashStep>,
     /// notes
     #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,
@@ -35,6 +33,11 @@ pub struct Mash {
     /// if `true`, mash infusion and decoction calculations should take into account the temperature effects of the equipment (tun specific heat and tun weight), if `false`, the tun is assumed to be pre-heated
     #[serde(skip_serializing_if="Option::is_none")]
     pub equip_adjust: Option<bool>,
+
+    // put the list at the end in the data structure
+    
+    /// mash steps
+    pub mash_steps: Vec<MashStep>,
 }
 
 /// type of the mash step

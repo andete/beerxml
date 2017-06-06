@@ -32,6 +32,8 @@ pub enum RecordSet {
     Yeasts(HashMap<String, Yeast>),
     /// a set of named styles
     Styles(HashMap<String, Style>),
+    /// a set of named mash profiles
+    Mashs(HashMap<String, Mash>),
 }
 
 mod equipment;

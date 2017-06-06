@@ -16,7 +16,7 @@ pub fn read<B>(reader: &mut Reader<B>) -> Result<(String, Style)>
                 b"NAME" => f.name = read_value(reader, name)?,
                 b"VERSION" => f.version = read_value_t(reader, name)?,
                 b"CATEGORY" => f.category = read_value(reader, name)?,
-                b"CATEGORY_NUMBERR" => f.category_number = read_value(reader, name)?,
+                b"CATEGORY_NUMBER" => f.category_number = read_value(reader, name)?,
                 b"STYLE_LETTER" => f.style_letter = read_value(reader, name)?,
                 b"STYLE_GUIDE" => f.style_guide = read_value(reader, name)?,
                 b"TYPE" => f.type_ = read_value_t(reader, name)?,

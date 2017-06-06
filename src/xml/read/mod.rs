@@ -84,6 +84,16 @@ fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
     }
 }
 
+fn read_value_b_o<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<bool>>
+    where B: BufRead
+{
+    let v = read_value(reader, name)?;
+    match v.as_str() {
+        "TRUE" => Ok(Some(true)),
+        _ => Ok(None),
+    }
+}
+
 fn read_t<B, F>(reader: &mut Reader<B>, name: &[u8], mut do_element: F) -> Result<()>
     where B: BufRead,
           F: FnMut(&mut Reader<B>, &[u8]) -> Result<()>
@@ -134,6 +144,36 @@ fn read_map<B, F, T>(reader: &mut Reader<B>,
     Ok(map)
 }
 
+fn read_vec<B, F, T>(reader: &mut Reader<B>,
+                     elements_name: &'static str,
+                     element_name: &'static str,
+                     read_element: F)
+                     -> Result<Vec<T>>
+    where B: BufRead,
+          F: Fn(&mut Reader<B>) -> Result<(String, T)>
+{
+    let element_name = element_name.as_bytes();
+    let elements_name = elements_name.as_bytes();
+    let mut buf = vec![];
+    let mut res = vec![];
+    loop {
+        match reader.read_event(&mut buf)? {
+            Event::Start(ref e) if e.name() == element_name => {
+                let (_, element) = read_element(reader)?;
+                res.push(element);
+            }
+            Event::Start(ref e) => {
+                warn!("Ignoring: {}", str::from_utf8(e.name()).unwrap());
+            }
+            Event::End(ref e) if e.name() == elements_name => break,
+            Event::Eof => break,
+            _ => (),
+        }
+        buf.clear();
+    }
+    Ok(res)
+}
+
 /// try to read a `RecordSet` from a `reader`
 pub fn read<B>(reader: B) -> Result<RecordSet>
     where B: BufRead
@@ -178,10 +218,15 @@ pub fn read<B>(reader: B) -> Result<RecordSet>
                 rs = RecordSet::Recipes(f);
                 // info!("Recipes: {:?}", f);
             }
-             Event::Start(ref e) if e.name() == b"STYLES" => {
+            Event::Start(ref e) if e.name() == b"STYLES" => {
                 let f = read_map(&mut reader, "STYLES", "STYLE", style::read)?;
                 rs = RecordSet::Styles(f);
                 // info!("Styles: {:?}", f);
+            }
+            Event::Start(ref e) if e.name() == b"MASHS" => {
+                let f = read_map(&mut reader, "MASHS", "MASH", mash::read)?;
+                rs = RecordSet::Mashs(f);
+                // info!("Mashs: {:?}", f);
             }
             Event::Start(ref e) => {
                 read_ignore(&mut reader, e.name())?;
@@ -227,3 +272,5 @@ mod misc;
 mod water;
 mod recipe;
 mod style;
+mod mash;
+mod mash_step;
