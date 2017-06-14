@@ -22,8 +22,6 @@ pub struct Recipe {
     pub type_: RecipeType,
     /// style of the recipe
     pub style:Style,
-    /// an optional equipment record
-    pub equipment:Option<Equipment>,
     /// name of the brewer
     pub brewer: String,
     /// optional name of the assistant brewer
@@ -36,8 +34,6 @@ pub struct Recipe {
     pub boil_time: f64,
     /// the percent brewhouse efficiency to be used for estimating the starting gravity of the beer; not required for “Extract” recipes, but is required for “Partial Mash” and “All Grain” recipes
     pub efficiency: Option<f64>,
-    /// mash profile
-    pub mash: Option<Mash>,
     /// notes
     #[serde(skip_serializing_if="Option::is_none")]
     pub notes: Option<String>,
@@ -47,6 +43,12 @@ pub struct Recipe {
     /// final gravity of the finished beer
     #[serde(skip_serializing_if="Option::is_none")]
     pub fg: Option<f64>,
+    /// an optional equipment record
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub equipment:Option<Equipment>,
+    /// mash profile
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub mash: Option<Mash>,
 
     // TABLES NEED TO BE LAST TO WORK WITH TOML
     /// hop ingredient records
