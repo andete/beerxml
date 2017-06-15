@@ -77,9 +77,9 @@ fn read_value_b<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<bool>
     where B: BufRead
 {
     let v = read_value(reader, name)?;
-    match v.as_str() {
-        "TRUE" => Ok(true),
-        "FALSE" => Ok(false),
+    match v.to_lowercase().as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
         x => Err(format!("unknown boolean: {}", x).into()),
     }
 }
@@ -88,8 +88,8 @@ fn read_value_b_o<B>(reader: &mut Reader<B>, name: &[u8]) -> Result<Option<bool>
     where B: BufRead
 {
     let v = read_value(reader, name)?;
-    match v.as_str() {
-        "TRUE" => Ok(Some(true)),
+    match v.to_lowercase().as_str() {
+        "true" => Ok(Some(true)),
         _ => Ok(None),
     }
 }
