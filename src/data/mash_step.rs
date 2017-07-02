@@ -1,9 +1,5 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
-use std::str;
-
-use error::*;
-
 /// a mash step is an internal record used within a mash profile to denote a separate step in a multi-step mash.  A mash step is not intended for use outside of a mash profile
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct MashStep {
@@ -30,7 +26,7 @@ pub struct MashStep {
 }
 
 /// type of the mash step
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum MashStepType {
     /// adding hot water
     Infusion,
@@ -43,17 +39,5 @@ pub enum MashStepType {
 impl Default for MashStepType {
     fn default() -> MashStepType {
         MashStepType::Infusion
-    }
-}
-
-impl str::FromStr for MashStepType {
-    type Err = Error;
-    fn from_str(name:&str) -> Result<MashStepType> {
-        match name {
-            "Infusion" => Ok(MashStepType::Infusion),
-            "Temperature" => Ok(MashStepType::Temperature),
-            "Decoction" => Ok(MashStepType::Decoction),
-            _ => Err(ErrorKind::ParseError("MashStepType".into(), name.into()).into()),
-        }
     }
 }

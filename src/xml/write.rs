@@ -72,7 +72,7 @@ fn write_fermentable<T>(writer: &mut T, f: &Fermentable, offset: usize) -> Resul
     write_block(writer, offset, "FERMENTABLE", |writer, offset| {
         write_tag(writer, offset, "NAME", &f.name)?;
         write_tag(writer, offset, "VERSION", &f.version)?;
-        write_tag(writer, offset, "TYPE", &f.type_)?;
+        write_tag(writer, offset, "TYPE", &f.type_.to_string())?;
         write_tag(writer, offset, "AMOUNT", &f.amount)?;
         write_tag(writer, offset, "YIELD", &f.yield_)?;
         write_tag(writer, offset, "COLOR", &f.color)?;
@@ -102,11 +102,13 @@ fn write_hop<T>(writer: &mut T, h: &Hop, offset: usize) -> Result<()>
         write_tag(writer, offset, "VERSION", &h.version)?;
         write_tag(writer, offset, "ALPHA", &h.alpha)?;
         write_tag(writer, offset, "AMOUNT", &h.amount)?;
-        write_tag(writer, offset, "USE", &h.use_)?;
+        write_tag(writer, offset, "USE", &h.use_.to_string())?;
         write_tag(writer, offset, "TIME", &h.time)?;
         write_opt(writer, offset, "NOTES", &h.notes)?;
-        write_opt(writer, offset, "TYPE", &h.type_)?;
-        write_opt(writer, offset, "FORM", &h.form)?;
+        let type_ = h.type_.as_ref().map(|x| x.to_string());
+        write_opt(writer, offset, "TYPE", &type_)?;
+        let form = h.form.as_ref().map(|x| x.to_string());
+        write_opt(writer, offset, "FORM", &form)?;
         write_opt(writer, offset, "BETA", &h.beta)?;
         write_opt(writer, offset, "HSI", &h.hsi)?;
         write_opt(writer, offset, "ORIGIN", &h.origin)?;
@@ -153,8 +155,8 @@ fn write_misc<T>(writer: &mut T, m: &Misc, offset: usize) -> Result<()>
     write_block(writer, offset, "MISC", |writer, offset| {
         write_tag(writer, offset, "NAME", &m.name)?;
         write_tag(writer, offset, "VERSION", &m.version)?;
-        write_tag(writer, offset, "TYPE", &m.type_)?;
-        write_tag(writer, offset, "USE", &m.use_)?;
+        write_tag(writer, offset, "TYPE", &m.type_.to_string())?;
+        write_tag(writer, offset, "USE", &m.use_.to_string())?;
         write_tag(writer, offset, "TIME", &m.time)?;
         write_tag(writer, offset, "AMOUNT", &m.amount)?;
         write_bool(writer, offset, "AMOUNT_IS_WEIGHT", m.amount_is_weight)?;

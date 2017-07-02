@@ -1,11 +1,5 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
-use std::fmt;
-use std::result;
-use std::str::FromStr;
-
-use error::*;
-
 /// a beer style
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Style {
@@ -68,7 +62,7 @@ pub struct Style {
 }
 
 /// defines the type of beverage associated with this style
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum StyleType {
     /// Lager beer
     Lager,
@@ -87,34 +81,5 @@ pub enum StyleType {
 impl Default for StyleType {
     fn default() -> StyleType {
         StyleType::Ale
-    }
-}
-
-impl FromStr for StyleType {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<StyleType> {
-        match name {
-            "Lager" => Ok(StyleType::Lager),
-            "Ale" => Ok(StyleType::Ale),
-            "Mead" => Ok(StyleType::Mead),
-            "Wheat" => Ok(StyleType::Wheat),
-            "Mixed" => Ok(StyleType::Mixed),
-            "Cider" => Ok(StyleType::Cider),
-            _ => Err(ErrorKind::ParseError("StyleType".into(), name.into()).into()),
-        }
-    }
-}
-
-impl fmt::Display for StyleType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            StyleType::Lager => "Lager",
-            StyleType::Ale => "Ale",
-            StyleType::Mead => "Mead",
-            StyleType::Wheat => "Wheat",
-            StyleType::Mixed => "Mixed",
-            StyleType::Cider => "Cider",
-        };
-        write!(f, "{}", x)
     }
 }

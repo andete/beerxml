@@ -1,12 +1,6 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
-// WIP
-use std::fmt;
-use std::result;
-use std::str::FromStr;
 use std::collections::HashMap;
-
-use error::*;
 use super::*;
 
 /// a beer recipe
@@ -64,7 +58,7 @@ pub struct Recipe {
 }
 
 /// recipe type
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum RecipeType {
     /// extract recipe
     Extract,
@@ -79,28 +73,5 @@ pub enum RecipeType {
 impl Default for RecipeType {
     fn default() -> RecipeType {
         RecipeType::AllGrain
-    }
-}
-
-impl FromStr for RecipeType {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<RecipeType> {
-        match name {
-            "Extract" => Ok(RecipeType::Extract),
-            "Partial Mash" => Ok(RecipeType::PartialMash),
-            "All Grain" => Ok(RecipeType::AllGrain),
-            _ => Err(ErrorKind::ParseError("RecipeType".into(), name.into()).into()),
-        }
-    }
-}
-
-impl fmt::Display for RecipeType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            RecipeType::Extract => "Extract",
-            RecipeType::PartialMash => "Partial Mash",
-            RecipeType::AllGrain => "All Grain",
-        };
-        write!(f, "{}", x)
     }
 }

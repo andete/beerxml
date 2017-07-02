@@ -1,12 +1,7 @@
 // (c) 2017 Joost Yervante Damad
 
-use error::*;
-use std::fmt;
-use std::result;
-use std::str::FromStr;
-
 /// a fermentable type
-#[derive(Debug,Serialize,Deserialize)]
+#[derive(ToString,EnumString,Debug,Serialize,Deserialize)]
 pub enum FermentableType {
     /// grain
     Grain,
@@ -16,6 +11,7 @@ pub enum FermentableType {
     Extract,
     /// dry extract
     #[serde(rename = "Dry Extract")]
+    #[strum(serialize = "Dry Extract")]
     DryExtract,
     /// adjunct
     Adjunct,
@@ -24,33 +20,6 @@ pub enum FermentableType {
 impl Default for FermentableType {
     fn default() -> FermentableType {
         FermentableType::Grain
-    }
-}
-
-impl FromStr for FermentableType {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<FermentableType> {
-        match name {
-            "Grain" => Ok(FermentableType::Grain),
-            "Sugar" => Ok(FermentableType::Sugar),
-            "Extract" => Ok(FermentableType::Extract),
-            "Dry Extract" => Ok(FermentableType::DryExtract),
-            "Adjunct" => Ok(FermentableType::Adjunct),
-            _ => Err(ErrorKind::ParseError("FermentableType".into(), name.into()).into()),
-        }
-    }
-}
-
-impl fmt::Display for FermentableType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            FermentableType::Grain => "Grain",
-            FermentableType::Sugar => "Sugar",
-            FermentableType::Extract => "Extract",
-            FermentableType::DryExtract => "Dry Extract",
-            FermentableType::Adjunct => "Adjunct",
-        };
-        write!(f, "{}", x)
     }
 }
 

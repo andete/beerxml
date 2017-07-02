@@ -1,11 +1,5 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
-use std::fmt;
-use std::result;
-use std::str::FromStr;
-
-use error::*;
-
 /// a hop
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Hop {
@@ -59,7 +53,7 @@ pub struct Hop {
 }
 
 /// the usage of the hop
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum HopUse {
     /// aroma hop usage
     Aroma,
@@ -67,9 +61,11 @@ pub enum HopUse {
     Boil,
     /// dry-hop hop usage
     #[serde(rename="Dry Hop")]
+    #[strum(serialize="Dry Hop")]
     DryHop,
     /// first wort hop usage
     #[serde(rename="First Wort")]
+    #[strum(serialize="First Wort")]
     FirstWort,
     /// mash hop usage
     Mash,
@@ -81,35 +77,8 @@ impl Default for HopUse {
     }
 }
 
-impl fmt::Display for HopUse {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            HopUse::Aroma => "Aroma",
-            HopUse::Boil => "Boil",
-            HopUse::DryHop => "Dry Hop",
-            HopUse::FirstWort => "First Wort",
-            HopUse::Mash => "Mash",
-        };
-        write!(f, "{}", x)
-    }
-}
-
-impl FromStr for HopUse {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<HopUse> {
-        match name {
-            "Aroma" => Ok(HopUse::Aroma),
-            "Boil" => Ok(HopUse::Boil),
-            "Dry Hop" => Ok(HopUse::DryHop),
-            "First Wort" => Ok(HopUse::FirstWort),
-            "Mash" => Ok(HopUse::Mash),
-            _ => Err(ErrorKind::ParseError("HopUse".into(), name.into()).into()),
-        }
-    }
-}
-
 /// the type of a hop
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum HopType {
     /// a bittering hop
     Bittering,
@@ -119,31 +88,8 @@ pub enum HopType {
     Both,
 }
 
-impl fmt::Display for HopType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            HopType::Bittering => "Bittering",
-            HopType::Aroma => "Aroma",
-            HopType::Both => "Both",
-        };
-        write!(f, "{}", x)
-    }
-}
-
-impl FromStr for HopType {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<HopType> {
-        match name {
-            "Bittering" => Ok(HopType::Bittering),
-            "Aroma" => Ok(HopType::Aroma),
-            "Both" => Ok(HopType::Both),
-            _ => Err(ErrorKind::ParseError("HopType".into(), name.into()).into()),
-        }
-    }
-}
-
 /// the form of a hop
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum HopForm {
     /// pellet hop
     Pellet,
@@ -151,28 +97,4 @@ pub enum HopForm {
     Plug,
     /// leaf hop
     Leaf,
-}
-
-impl fmt::Display for HopForm {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            HopForm::Pellet => "Pellet",
-            HopForm::Plug => "Plug",
-            HopForm::Leaf => "Leaf",
-        };
-        write!(f, "{}", x)
-    }
-}
-
-impl FromStr for HopForm {
-    type Err = Error;
-    /// create a `HopForm` from a `String`
-    fn from_str(name: &str) -> Result<HopForm> {
-        match name {
-            "Pellet" => Ok(HopForm::Pellet),
-            "Plug" => Ok(HopForm::Plug),
-            "Leaf" => Ok(HopForm::Leaf),
-            _ => Err(ErrorKind::ParseError("HopForm".into(), name.into()).into()),
-        }
-    }
 }
