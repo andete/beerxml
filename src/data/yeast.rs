@@ -1,11 +1,5 @@
 // (c) 2017 Joost Yervante Damad <joost@damad.be>
 
-use std::fmt;
-use std::result;
-use std::str::FromStr;
-
-use error::*;
-
 /// a yeast
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Yeast {
@@ -73,7 +67,7 @@ pub struct Yeast {
 }
 
 /// the type of a yeast
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum YeastType {
     /// ale (top-fermenting) yeast
     Ale,
@@ -93,35 +87,8 @@ impl Default for YeastType {
     }
 }
 
-impl FromStr for YeastType {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<YeastType> {
-        match name {
-            "Ale" => Ok(YeastType::Ale),
-            "Lager" => Ok(YeastType::Lager),
-            "Wheat" => Ok(YeastType::Wheat),
-            "Wine" => Ok(YeastType::Wine),
-            "Champagne" => Ok(YeastType::Champagne),
-            _ => Err(ErrorKind::ParseError("YeastType".into(), name.into()).into()),
-        }
-    }
-}
-
-impl fmt::Display for YeastType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            YeastType::Ale => "Ale",
-            YeastType::Lager => "Lager",
-            YeastType::Wheat => "Wheat",
-            YeastType::Wine => "Wine",
-            YeastType::Champagne => "Champagne",
-        };
-        write!(f, "{}", x)
-    }
-}
-
 /// the form of the yeast
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum YeastForm {
     /// liquid yeast
     Liquid,
@@ -138,33 +105,9 @@ impl Default for YeastForm {
         YeastForm::Liquid
     }
 }
-impl fmt::Display for YeastForm {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            YeastForm::Liquid => "Liquid",
-            YeastForm::Dry => "Dry",
-            YeastForm::Slate => "Slate",
-            YeastForm::Culture => "Culture",
-        };
-        write!(f, "{}", x)
-    }
-}
-
-impl FromStr for YeastForm {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<YeastForm> {
-        match name {
-            "Liquid" => Ok(YeastForm::Liquid),
-            "Dry" => Ok(YeastForm::Dry),
-            "Slate" => Ok(YeastForm::Slate),
-            "Culture" => Ok(YeastForm::Culture),
-            _ => Err(ErrorKind::ParseError("YeastForm".into(), name.into()).into()),
-        }
-    }
-}
 
 /// flocculation of a yeast
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum YeastFlocculation {
     /// low flocculation
     Low,
@@ -174,36 +117,12 @@ pub enum YeastFlocculation {
     High,
     /// very flocculation
     #[serde(rename = "Very High")]
+    #[strum(serialize = "Very High")]
     VeryHigh,
 }
 
 impl Default for YeastFlocculation {
     fn default() -> YeastFlocculation {
         YeastFlocculation::Low
-    }
-}
-
-impl fmt::Display for YeastFlocculation {
-    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
-        let x = match *self {
-            YeastFlocculation::Low => "Low",
-            YeastFlocculation::Medium => "Medium",
-            YeastFlocculation::High => "High",
-            YeastFlocculation::VeryHigh => "Very High",
-        };
-        write!(f, "{}", x)
-    }
-}
-
-impl FromStr for YeastFlocculation {
-    type Err = Error;
-    fn from_str(name: &str) -> Result<YeastFlocculation> {
-        match name {
-            "Low" => Ok(YeastFlocculation::Low),
-            "Medium" => Ok(YeastFlocculation::Medium),
-            "High" => Ok(YeastFlocculation::High),
-            "Very High" => Ok(YeastFlocculation::VeryHigh),
-            _ => Err(ErrorKind::ParseError("YeastFlocculation".into(), name.into()).into()),
-        }
     }
 }

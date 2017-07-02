@@ -124,15 +124,16 @@ fn write_yeast<T>(writer: &mut T, y: &Yeast, offset: usize) -> Result<()>
     write_block(writer, offset, "YEAST", |writer, offset| {
         write_tag(writer, offset, "NAME", &y.name)?;
         write_tag(writer, offset, "VERSION", &y.version)?;
-        write_tag(writer, offset, "TYPE", &y.type_)?;
-        write_tag(writer, offset, "FORM", &y.form)?;
+        write_tag(writer, offset, "TYPE", &y.type_.to_string())?;
+        write_tag(writer, offset, "FORM", &y.form.to_string())?;
         write_tag(writer, offset, "AMOUNT", &y.amount)?;
         write_bool(writer, offset, "AMOUNT_IS_WEIGHT", y.amount_is_weight)?;
         write_opt(writer, offset, "LABORATORY", &y.laboratory)?;
         write_opt(writer, offset, "PRODUCT_ID", &y.product_id)?;
         write_opt(writer, offset, "MIN_TEMPERATURE", &y.min_temperature)?;
         write_opt(writer, offset, "MAX_TEMPERATURE", &y.max_temperature)?;
-        write_opt(writer, offset, "FLOCCULATION", &y.flocculation)?;
+        let floc = y.flocculation.as_ref().map(|x| x.to_string());
+        write_opt(writer, offset, "FLOCCULATION", &floc)?;
         write_opt(writer, offset, "ATTENUATION", &y.attenuation)?;
         write_opt(writer, offset, "NOTES", &y.notes)?;
         write_opt(writer, offset, "BEST_FOR", &y.best_for)?;

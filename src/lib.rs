@@ -9,6 +9,7 @@ extern crate quick_xml;
 extern crate serde;
 extern crate serde_json;
 extern crate serde_yaml;
+extern crate strum;
 extern crate toml as serde_toml;
 
 #[macro_use]
@@ -17,6 +18,8 @@ extern crate error_chain;
 extern crate log;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate strum_macros;
 
 use std::path::Path;
 
