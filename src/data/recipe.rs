@@ -64,9 +64,11 @@ pub enum RecipeType {
     Extract,
     /// paritial mash recipe
     #[serde(rename = "Partial Mash")]
+    #[strum(serialize="Partial Mash")]
     PartialMash,
     /// all-grain recipe
     #[serde(rename = "All Grain")]
+    #[strum(serialize = "All Grain")]
     AllGrain,
 }
 

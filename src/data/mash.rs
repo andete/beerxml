@@ -41,7 +41,7 @@ pub struct Mash {
 }
 
 /// type of the mash step
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToString, EnumString, Serialize, Deserialize, Debug)]
 pub enum MashStepType {
     /// adding hot water
     Infusion,

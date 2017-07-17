@@ -14,7 +14,7 @@ categories = ["command-line-utilities"]
 travis-ci = { repository = "andete/beerxml" }
 
 [dependencies]
-clap = "2.20"
+clap = "2.25"
 env_logger = "0.3"
 error-chain = "0.10"
 log = "0.3"
